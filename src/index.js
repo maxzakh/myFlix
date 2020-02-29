@@ -13,35 +13,61 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 const auth = require('./auth.js')(app); // Make sure this is after bodyParser, app ensures Express is available in auth.js as well
+const cors = require('cors');
+app.use(cors());
 
 const Movies = Models.Movie;
 const Users = Models.User;
 
+var allowedOrigins = ['http://localhost:5500', 'http://testsite.com'];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) { // If a specific origin isn’t found on the list of allowed origins
+            var message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+            return callback(new Error(message), false);
+        }
+        return callback(null, true);
+    }
+}));
+
 // POST Requests
-app.post('/users', (req, res) => {
-    Users.findOne({ Username: req.body.Username })
-        .then((user) => {
-            if (user) {
-                return res.status(400).send(req.body.Username + "already exists");
-            } else {
-                Users
-                    .create({
-                        Username: req.body.Username,
-                        Password: req.body.Password,
-                        Email: req.body.Email,
-                        Birthday: req.body.Birthday
-                    })
-                    .then((user) => { res.status(201).json(user) })
-                    .catch((error) => {
-                        console.error(error);
-                        res.status(500).send("Error: " + error);
-                    })
-            }
-        }).catch((error) => {
-            console.error(error);
-            res.status(500).send("Error: " + error);
-        });
-});
+app.post('/users',
+    [check('Username', 'Username is required').isLength({ min: 5 }),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()], (req, res) => {
+        var errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+
+        var hashedPassword = Users.hashPassword(req.body.Password);
+        Users.findOne({ Username: req.body.Username }) // Search to see if a user with the requested username already exists
+            .then(function (user) {
+                if (user) {
+                    return res.status(400).send(req.body.Username + " already exists");
+                } else {
+                    Users
+                        .create({
+                            Username: req.body.Username,
+                            Password: hashedPassword,
+                            Email: req.body.Email,
+                            Birthday: req.body.Birthday
+                        })
+                        .then(function (user) { res.status(201).json(user) })
+                        .catch(function (error) {
+                            console.error(error);
+                            res.status(500).send("Error: " + error);
+                        });
+                }
+            }).catch(function (error) {
+                console.error(error);
+                res.status(500).send("Error: " + error);
+            });
+    });
 
 app.post('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate({ Username: req.params.Username }, {
