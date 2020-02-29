@@ -20,6 +20,7 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 var allowedOrigins = ['http://localhost:5500', 'http://testsite.com'];
+mongoose.connect('mongodb+srv://maxzakh:<password>@movies-my-flix-0j4lo.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true });
 
 app.use(cors({
     origin: function (origin, callback) {
