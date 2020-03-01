@@ -7,6 +7,7 @@ const passport = require('passport');
 require('./passport.js');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
+const {check, validationResult} = require('express-validator');
 
 const app = express();
 app.use(morgan('dev'));
@@ -35,34 +36,37 @@ app.use(cors({
 
 // POST Requests
 app.post('/users',
-    [check('Username', 'Username is required').isLength({ min: 5 }),
+    [check('Username', 'Username is required').isLength({ min: 4 }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').isEmail()], (req, res) => {
-        var errors = validationResult(req);
+    check('Email', 'Email does not appear to be valid').isEmail()],
+    (req, res) => {
 
+        var errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
         }
 
         var hashedPassword = Users.hashPassword(req.body.Password);
-        Users.findOne({ Username: req.body.Username }) // Search to see if a user with the requested username already exists
+        Users.findOne({ Username: req.body.Username })
             .then(function (user) {
                 if (user) {
-                    return res.status(400).send(req.body.Username + " already exists");
+                    return res.status(400).send(req.body.Username + "already exists");
                 } else {
                     Users
                         .create({
                             Username: req.body.Username,
+                            Name: req.body.Name,
                             Password: hashedPassword,
                             Email: req.body.Email,
-                            Birthday: req.body.Birthday
                         })
-                        .then(function (user) { res.status(201).json(user) })
+                        .then(function (user) {
+                            res.status(201).json(user)
+                        })
                         .catch(function (error) {
                             console.error(error);
                             res.status(500).send("Error: " + error);
-                        });
+                        })
                 }
             }).catch(function (error) {
                 console.error(error);
@@ -212,6 +216,6 @@ app.delete('/users/:Username', (req, res) => {
 
 const port = process.env.PORT || 5500;
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
     console.log(`listening on port ${port}`);
 });
