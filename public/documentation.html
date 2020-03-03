@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style type="text/css">
+        .tg  {border-collapse:collapse;border-spacing:0;}
+        .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+        .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+        .tg .tg-p8sp{font-size:20px;border-color:inherit;text-align:center;vertical-align:top}
+        .tg .tg-fymr{font-weight:bold;border-color:inherit;text-align:left;vertical-align:top}
+        .tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+        .tg .tg-0lax{text-align:left;vertical-align:top}
+        </style>
+        <table class="tg" style="table-layout: fixed; width: 1269px">
+        <colgroup>
+        <col style="width: 152px">
+        <col style="width: 232px">
+        <col style="width: 83px">
+        <col style="width: 330px">
+        <col style="width: 74px">
+        <col style="width: 398px">
+        </colgroup>
+          <tr>
+            <th class="tg-p8sp" colspan="6">Post Requests</th>
+          </tr>
+          <tr>
+            <td class="tg-fymr">Request</td>
+            <td class="tg-fymr">URL</td>
+            <td class="tg-fymr">Request Body Data</td>
+            <td class="tg-fymr">Request Example</td>
+            <td class="tg-fymr">Response</td>
+            <td class="tg-fymr">Response Example</td>
+          </tr>
+          <tr>
+            <td class="tg-0pky">Create an account</td>
+            <td class="tg-0pky">/users</td>
+            <td class="tg-0pky">JSON</td>
+            <td class="tg-0pky">{<br>"Username": "davidcohen2580",<br> "Password": "test123",<br>"Email": "davidcohen258-@gmail.com",<br>"Birthday": "09/09/1990"<br>}</td>
+            <td class="tg-0pky">JSON</td>
+            <td class="tg-0pky">{<br>   "FavoriteMovies": [],<br>   "Username": "davidcohen2580",<br>   "Password": "test123",<br>   "Email": "davidcohen2580@gmail.com",<br>   "Birthday": "1988-09-10T07:00:00.000Z"<br>}</td>
+          </tr>
+          <tr>
+            <td class="tg-0pky">Add movie to favorites</td>
+            <td class="tg-0pky">/users/:Username/Movies/:MovieID</td>
+            <td class="tg-0pky">None</td>
+            <td class="tg-0pky">{<br>"FavoriteMovies": "5e4b8914922d2acb9e582997"<br>}</td>
+            <td class="tg-0pky">JSON</td>
+            <td class="tg-0pky">{<br>    "FavoriteMovies": ["5e4b8914922d2acb9e582997"],<br>    "Username": "davidcohen2580",<br>    "Password": "test123",<br>    "Email": "davidcohen2580@gmail.com",<br>    "Birthday": "1988-09-10T07:00:00.000Z"<br>}</td>
+          </tr>
+          <tr>
+            <td class="tg-p8sp" colspan="6">Get Requests</td>
+          </tr>
+          <tr>
+            <td class="tg-fymr">Request</td>
+            <td class="tg-fymr">URL</td>
+            <td class="tg-fymr">Request Body Data</td>
+            <td class="tg-fymr">Request Example</td>
+            <td class="tg-fymr">Response</td>
+            <td class="tg-fymr">Response Example</td>
+          </tr>
+          <tr>
+            <td class="tg-0pky">A list of all the movies</td>
+            <td class="tg-0pky">/movies</td>
+            <td class="tg-0pky">None</td>
+            <td class="tg-0pky">/movies</td>
+            <td class="tg-0pky">JSON</td>
+            <td class="tg-0pky">{<br>    "Genre": { <br>"Name": "Thriller",<br>            "Description": "Thriller film, also known as suspense film or suspense thriller, is a broad film genre that involves excitement and suspense in the audience."<br><br>        },<br>        "Director"<br>: {<br>            "Name"<br>: "Jonathan Demme"<br>,<br>            "Bio"<br>: "Robert Jonathan Demme was an American director, producer, and screenwriter."<br>,<br>            "Birth"<br>: "1944"<br>,<br>            "Death"<br>: "2017"<br><br>        },<br>        "Actors"<br>: [],<br>        "_id"<br>: "5e4a5209922d2acb9e582991"<br>,<br>        "Title"<br>: "Silence of the Lambs"<br>,<br>        "Description"<br>: "A young FBI cadet must receive the help of an incarcerated and manipulative cannibal killer to help catch another serial killer."<br>,<br>        "ImagePath"<br>: "silenceofthelambs.png"<br>,<br>        "Featured"<br>: true<br><br>    }</td>
+          </tr>
+          <tr>
+            <td class="tg-0pky">Information about a specific movie, use %20 for spaces</td>
+            <td class="tg-0pky">/movies/:title</td>
+            <td class="tg-0pky">None</td>
+            <td class="tg-0pky">/movies/inception</td>
+            <td class="tg-0pky">JSON</td>
+            <td class="tg-0pky">{<br>    "Genre"<br>: {<br>        "Name"<br>: "Sci-Fi"<br>,<br>        "Description"<br>: "Science fiction film is a genre that uses speculative, fictional science-based depictions of phenomena that are not fully accepted by mainstream science."<br><br>    },<br>    "Director"<br>: {<br>        "Name"<br>: "Christopher Nolan"<br>,<br>        "Bio"<br>: "Christopher Edward Nolan, is a English-American filmmaker, who is known for making personal, distinctive films within the Hollywood mainstream."<br>,<br>        "Birth"<br>: "1970"<br>,<br>        "Death"<br>: "2040"<br><br>    },<br>    "Actors"<br>: [],<br>    "_id"<br>: "5e4b875c922d2acb9e582993"<br>,<br>    "Title"<br>: "Inception"<br>,<br>    "Description"<br>: "A young FBI cadet must receive the help of an incarcerated and manipulative cannibal killer to help catch another serial killer."<br>,<br>    "ImagePath"<br>: "inception.png"<br>,<br>    "Featured"<br>: true<br><br>}</td>
+          </tr>
+          <tr>
+            <td class="tg-0pky">Information about a specific genre</td>
+            <td class="tg-0pky">/movies/genres/:title</td>
+            <td class="tg-0pky">None</td>
+            <td class="tg-0pky">/movies/genres/thriller</td>
+            <td class="tg-0pky"></td>
+            <td class="tg-0pky">{<br>    "Name"<br>: "Thriller"<br>,<br>    "Description"<br>: "Thriller film, also known as suspense film or suspense thriller, is a broad film genre that involves excitement and suspense in the audience."<br><br>}</td>
+          </tr>
+          <tr>
+            <td class="tg-0pky">Information about a specific director, use %20 for spaces</td>
+            <td class="tg-0pky">/movies/directors/:name</td>
+            <td class="tg-0pky">None</td>
+            <td class="tg-0pky">/movies/directors/christopher%20nolan</td>
+            <td class="tg-0pky"></td>
+            <td class="tg-0pky">{<br>    "Name"<br>: "Christopher Nolan"<br>,<br>    "Bio"<br>: "Christopher Edward Nolan, is a English-American filmmaker, who is known for making personal, distinctive films within the Hollywood mainstream."<br>,<br>    "Birth"<br>: "1970"<br>,<br>    "Death"<br>: "2040"<br><br>}</td>
+          </tr>
+          <tr>
+            <td class="tg-p8sp" colspan="6">Put Requests</td>
+          </tr>
+          <tr>
+            <td class="tg-fymr">Request</td>
+            <td class="tg-fymr">URL</td>
+            <td class="tg-fymr">Request Body Data</td>
+            <td class="tg-fymr">Request Example</td>
+            <td class="tg-fymr">Response</td>
+            <td class="tg-fymr">Response Example</td>
+          </tr>
+          <tr>
+            <td class="tg-0pky">Update account information</td>
+            <td class="tg-0pky">/users/:username</td>
+            <td class="tg-0pky">JSON</td>
+            <td class="tg-0pky">{<br>        "FavoriteMovies"<br>: [],<br>        "Username"<br>: "davidcohen2580"<br>,<br>        "Password"<br>: "test123"<br>,<br>        "Email"<br>: "davidcohen2580@gmail.com"<br>,<br>        "Birthday"<br>: "1988-09-10T07:00:00.000Z"<br><br>    }</td>
+            <td class="tg-0pky">JSON</td>
+            <td class="tg-0pky">{<br>        "FavoriteMovies"<br>: [],<br>        "Username"<br>: "davidcohen2580"<br>,<br>        "Password"<br>: "test123"<br>,<br>        "Email"<br>: "davidcohen2580@gmail.com"<br>,<br>        "Birthday"<br>: "1988-09-10T07:00:00.000Z"<br><br>    }</td>
+          </tr>
+          <tr>
+            <td class="tg-p8sp" colspan="6">Delete Requests</td>
+          </tr>
+          <tr>
+            <td class="tg-fymr">Request</td>
+            <td class="tg-fymr">URL</td>
+            <td class="tg-fymr">Request Body Data</td>
+            <td class="tg-fymr">Request Example</td>
+            <td class="tg-fymr">Response</td>
+            <td class="tg-fymr">Response Example</td>
+          </tr>
+          <tr>
+            <td class="tg-0lax">Delete your account</td>
+            <td class="tg-0lax">/users/:username</td>
+            <td class="tg-0lax">None</td>
+            <td class="tg-0lax">/users/davidcohen2580</td>
+            <td class="tg-0lax">Message</td>
+            <td class="tg-0lax">davidcohen2580 not found</td>
+          </tr>
+        </table>
+</body>
+</html>
