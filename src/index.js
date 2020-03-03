@@ -7,10 +7,11 @@ const passport = require('passport');
 require('./passport.js');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
-const {check, validationResult} = require('express-validator');
+const { check, validationResult } = require('express-validator');
 
 const app = express();
 app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const auth = require('./auth.js')(app); // Make sure this is after bodyParser, app ensures Express is available in auth.js as well
@@ -21,7 +22,12 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 var allowedOrigins = ['http://localhost:5500', 'http://testsite.com'];
-mongoose.connect('mongodb+srv://maxzakh:<password>@movies-my-flix-0j4lo.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true });
+const CONNECTION_REMOTE_URL = 'mongodb+srv://maxzakh:54ndpaper@movies-my-flix-0j4lo.mongodb.net/test?retryWrites=true&w=majority';
+const CONNECTION_LOCAL_URL = 'mongodb://127.0.0.1:27017';
+mongoose.connect(CONNECTION_LOCAL_URL, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true
+});
 
 app.use(cors({
     origin: function (origin, callback) {
@@ -33,6 +39,15 @@ app.use(cors({
         return callback(null, true);
     }
 }));
+
+// Case insensitive search
+function createSearchObject(key, value) {
+    let rv = {};
+    rv[key] = {
+        $regex: new RegExp("^" + value, "i")
+    }
+    return rv;
+}
 
 // POST Requests
 app.post('/users',
@@ -119,7 +134,7 @@ app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) =
 });
 
 app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOne({ Username: req.params.Username })
+    Users.findOne(createSearchObject('Username', req.params.Username))
         .then((user) => {
             res.json(user)
         })
@@ -140,7 +155,7 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 });
 
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Movies.findOne({ Title: req.params.Title })
+    Movies.findOne(createSearchObject('Title', req.params.Title ))
         .then((movie) => {
             res.json(movie)
         })
@@ -150,13 +165,13 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
         });
 });
 
-app.get('/movies/genres/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Movies.findOne({ 'Genre.Title': req.params.Title })
+app.get('/movies/genres/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Movies.findOne(createSearchObject('Genre.Name', req.params.Name))
         .then((movie) => {
             if (movie) {
                 res.status(201).json(movie.Genre);
             } else {
-                res.status(404).send(req.params.Title + " was not found.");
+                res.status(404).send(req.params.Name + " was not found.");
             }
         })
         .catch((err) => {
@@ -166,14 +181,15 @@ app.get('/movies/genres/:Title', passport.authenticate('jwt', { session: false }
 });
 
 app.get('/movies/directors/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Movies.findOne({ 'Director.Name': req.params.Name })
+    Movies
+        .findOne(createSearchObject('Director.Name', req.params.Name))
         .then((movie) => {
             res.status(201).json(movie.Director);
         })
         .catch((err) => {
             console.error(err);
             res.status(500).send("Error: " + err);
-        })
+        });
 });
 
 // UPDATE Requests
