@@ -24,7 +24,7 @@ const Users = Models.User;
 var allowedOrigins = ['http://localhost:5500', 'http://testsite.com'];
 const CONNECTION_REMOTE_URL = 'mongodb+srv://maxzakh:54ndpaper@movies-my-flix-0j4lo.mongodb.net/myFlixDB?retryWrites=true&w=majority';
 const CONNECTION_LOCAL_URL = 'mongodb://127.0.0.1:27017';
-mongoose.connect(CONNECTION_REMOTE_URL, {
+mongoose.connect(CONNECTION_LOCAL_URL, {
     useUnifiedTopology: true,
     useNewUrlParser: true
 });
@@ -155,7 +155,7 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 });
 
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Movies.findOne(createSearchObject('Title', req.params.Title ))
+    Movies.findOne(createSearchObject('Title', req.params.Title))
         .then((movie) => {
             res.json(movie)
         })
@@ -203,7 +203,7 @@ app.put('/users/:Username', (req, res) => {
             Birthday: req.body.Birthday
         }
     },
-        { new: true }, // This line makes sure that the updated document is returned
+        { new: true },
         (err, updatedUser) => {
             if (err) {
                 console.error(err);
@@ -230,8 +230,27 @@ app.delete('/users/:Username', (req, res) => {
         });
 });
 
+app.delete('/users/:Username/Movies/:MovieID',
+    passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        Users.findOneAndUpdate(
+            { Username: req.params.Username },
+            { $pull: { FavoriteMovies: req.params.MovieID } },
+            { new: true },
+            (err, updatedUser) => {
+                if (err) {
+                    console.err(err);
+                    res.status(500).send("Error: " + err);
+                } else {
+                    res.json(updatedUser);
+                }
+            }
+        );
+    }
+);
+
 const port = process.env.PORT || 5500;
 
 app.listen(port, "0.0.0.0", () => {
-    console.log(`listening on port ${port}`);
+    console.log(`listening on port ${port} ${new Date()}`);
 });
