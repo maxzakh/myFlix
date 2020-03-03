@@ -24,7 +24,7 @@ const Users = Models.User;
 var allowedOrigins = ['http://localhost:5500', 'http://testsite.com'];
 const CONNECTION_REMOTE_URL = 'mongodb+srv://maxzakh:54ndpaper@movies-my-flix-0j4lo.mongodb.net/test?retryWrites=true&w=majority';
 const CONNECTION_LOCAL_URL = 'mongodb://127.0.0.1:27017';
-mongoose.connect(CONNECTION_LOCAL_URL, {
+mongoose.connect(CONNECTION_REMOTE_URL, {
     useUnifiedTopology: true,
     useNewUrlParser: true
 });
