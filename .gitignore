@@ -1,5 +1,6 @@
 node_modules
 references
 .env
+.cache
 /client/.cache
 /client/node_modules
