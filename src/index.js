@@ -91,7 +91,7 @@ app.post('/users',
             });
     });
 
-app.post('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.post('/users/:Username/Movies/:MovieID', (req, res) => {
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $push: { FavoriteMovies: req.params.MovieID }
     },
@@ -112,7 +112,7 @@ app.get('/', (req, res) => {
     res.end('<h1>This is the default</h1>');
 });
 
-app.get('/login', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/login', (req, res) => {
     let login = path.join(__dirname, '../public/login.html');
     fs.readFile(login, (err, data) => {
         if (err) {
@@ -124,7 +124,7 @@ app.get('/login', passport.authenticate('jwt', { session: false }), (req, res) =
     });
 });
 
-app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/users', (req, res) => {
     Users.find()
         .then((users) => {
             res.status(201).json(users)
@@ -135,7 +135,7 @@ app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) =
         });
 });
 
-app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/users/:Username', (req, res) => {
     Users.findOne(createSearchObject('Username', req.params.Username))
         .then((user) => {
             res.json(user)
@@ -146,7 +146,7 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
         });
 });
 
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies', (req, res) => {
     Movies.find()
         .then((movies) => {
             res.status(201).json(movies);
@@ -156,7 +156,7 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
         });
 });
 
-app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/:Title', (req, res) => {
     Movies.findOne(createSearchObject('Title', req.params.Title))
         .then((movie) => {
             res.json(movie)
@@ -167,7 +167,7 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
         });
 });
 
-app.get('/movies/genres/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/genres/:Name', (req, res) => {
     Movies.findOne(createSearchObject('Genre.Name', req.params.Name))
         .then((movie) => {
             if (movie) {
@@ -182,7 +182,7 @@ app.get('/movies/genres/:Name', passport.authenticate('jwt', { session: false })
         });
 });
 
-app.get('/movies/directors/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/directors/:Name', (req, res) => {
     Movies
         .findOne(createSearchObject('Director.Name', req.params.Name))
         .then((movie) => {
@@ -233,7 +233,6 @@ app.delete('/users/:Username', (req, res) => {
 });
 
 app.delete('/users/:Username/Movies/:MovieID',
-    passport.authenticate('jwt', { session: false }),
     (req, res) => {
         Users.findOneAndUpdate(
             { Username: req.params.Username },
