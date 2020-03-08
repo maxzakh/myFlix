@@ -2,3 +2,4 @@ node_modules
 references
 .env
 .cache
+dist

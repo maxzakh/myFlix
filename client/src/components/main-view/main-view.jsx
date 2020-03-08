@@ -4,7 +4,7 @@ import axios from 'axios';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 
-class MainView extends React.Component {
+export class MainView extends React.Component {
     constructor() {
         // Call the superclass constructor
         // so React can initialize it
@@ -19,7 +19,7 @@ class MainView extends React.Component {
 
     // One of the "hooks" available in a React Component
     componentDidMount() {
-        axios.get('<my-api-endpoint/movies>')
+        axios.get('http://localhost:5500/movies')
             .then(response => {
                 // Assign the result to the state
                 this.setState({
@@ -37,6 +37,12 @@ class MainView extends React.Component {
         });
     }
 
+    onBackClick() {
+        this.setState({
+            selectedMovie: null
+        });
+    }
+
     // This overrides the render() method of the superclass
     // No need to call super() though, as it does nothing by default
     render() {
@@ -50,9 +56,13 @@ class MainView extends React.Component {
         return (
             <div className="main-view">
                 {selectedMovie
-                    ? <MovieView movie={selectedMovie} />
+                    ? <MovieView movie={selectedMovie} clearSelectedMovie={
+                        () => this.onBackClick()
+                    }/>
                     : movies.map(movie => (
-                        <MovieCard key={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)} />
+                        <MovieCard key={movie._id} movie={movie} setSelectedMovie={
+                            movie => this.onMovieClick(movie)
+                        } />
                     ))
                 }
             </div>
