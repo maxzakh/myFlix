@@ -22,10 +22,11 @@ app.use(cors());
 const Movies = Models.Movie;
 const Users = Models.User;
 
-
 const CONNECTION_REMOTE_URL = process.env.REMOTE;
 const CONNECTION_LOCAL_URL = 'mongodb://127.0.0.1:27017';
-mongoose.connect(CONNECTION_REMOTE_URL, {
+const connectionUrl = process.env.USE_LOCAL ? CONNECTION_LOCAL_URL : CONNECTION_REMOTE_URL;
+
+mongoose.connect(connectionUrl, {
     useUnifiedTopology: true,
     useNewUrlParser: true
 });
@@ -253,5 +254,5 @@ app.delete('/users/:Username/Movies/:MovieID',
 const port = process.env.PORT || 5500;
 
 app.listen(port, "0.0.0.0", () => {
-    console.log(`listening on port ${port} ${new Date()}`);
+    console.log(`listening on port ${port} ${new Date()} ${process.env.USE_LOCAL ? 'locally' : 'remotely'}`);
 });
