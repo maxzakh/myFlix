@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import { Container } from 'react-bootstrap';
+import { Container, CardGroup } from 'react-bootstrap';
+import './main-view.scss';
 
 import { LoginView } from '../login-view/login-view';
 import { MovieCard } from '../movie-card/movie-card';
@@ -60,21 +61,28 @@ export class MainView extends React.Component {
         const { movies, selectedMovie, user } = this.state;
 
         if (!user) return (
-            <Container style={{width: '26em'}}>
+            <Container className="container-login-view">
                 <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
             </Container>
         );
 
-        // Before the movies have been loaded
-        if (!movies) return <div className="main-view" />;
-
         return (
             <div className="main-view">
-                {selectedMovie
-                    ? <MovieView movie={selectedMovie} clearSelection={ () => this.clearMovieSelection() } />
-                    : movies.map(movie => (
-                        <MovieCard key={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)} />
-                    ))
+                {
+                    movies
+                        ? 
+                            selectedMovie
+                                ? <MovieView movie={selectedMovie} clearSelection={ () => this.clearMovieSelection() } />
+                                : 
+                                    <CardGroup className='container-movie-cards'>
+                                        {
+                                            movies.map(movie => (
+                                                <MovieCard key={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)} />
+                                            ))
+                                        }
+                                    </CardGroup>
+                        :
+                            ''
                 }
             </div>
         );

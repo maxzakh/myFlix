@@ -1,0 +1,12 @@
+.movie-card {
+    background-color: red;
+    display: flex;
+    flex: 1 0 25%;
+}
+
+.card-img-top {
+    width: 100%;
+    min-height: 400px;
+    object-fit: cover;
+}
+
