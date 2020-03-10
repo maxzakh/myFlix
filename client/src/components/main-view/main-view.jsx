@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
+import { Container } from 'react-bootstrap';
 
+import { LoginView } from '../login-view/login-view';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 
@@ -13,7 +15,8 @@ export class MainView extends React.Component {
         // Initialize the state to an empty object so we can destructure it later
         this.state = {
             movies: null,
-            selectedMovie: null
+            selectedMovie: null,
+            user: null
         };
     }
 
@@ -37,9 +40,15 @@ export class MainView extends React.Component {
         });
     }
 
-    onBackClick() {
+    clearMovieSelection() {
         this.setState({
             selectedMovie: null
+        });
+    }
+
+    onLoggedIn(user) {
+        this.setState({
+            user
         });
     }
 
@@ -48,7 +57,13 @@ export class MainView extends React.Component {
     render() {
         // If the state isn't initialized, this will throw on runtime
         // before the data is initially loaded
-        const { movies, selectedMovie } = this.state;
+        const { movies, selectedMovie, user } = this.state;
+
+        if (!user) return (
+            <Container style={{width: '26em'}}>
+                <LoginView onLoggedIn={user => this.onLoggedIn(user)} />
+            </Container>
+        );
 
         // Before the movies have been loaded
         if (!movies) return <div className="main-view" />;
@@ -56,13 +71,9 @@ export class MainView extends React.Component {
         return (
             <div className="main-view">
                 {selectedMovie
-                    ? <MovieView movie={selectedMovie} clearSelectedMovie={
-                        () => this.onBackClick()
-                    }/>
+                    ? <MovieView movie={selectedMovie} clearSelection={ () => this.clearMovieSelection() } />
                     : movies.map(movie => (
-                        <MovieCard key={movie._id} movie={movie} setSelectedMovie={
-                            movie => this.onMovieClick(movie)
-                        } />
+                        <MovieCard key={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)} />
                     ))
                 }
             </div>
