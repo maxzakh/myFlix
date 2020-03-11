@@ -1,4 +1,7 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
+import './movie-view.scss'
+import { Container, Card } from 'react-bootstrap';
 
 export class MovieView extends React.Component {
 
@@ -14,27 +17,18 @@ export class MovieView extends React.Component {
         if (!movie) return null;
 
         return (
-            <div className="movie-view">
-                <img className="movie-poster" src={movie.ImagePath} />
-                <div className="movie-title">
-                    <span className="label">Title: </span>
-                    <span className="value">{movie.Title}</span>
+            <Container className="movie-view col-8">
+                <Card.Img src={movie.ImagePath} />
+                <Card.Title>{movie.Title}</Card.Title>
+                <Card.Text>{movie.Description}</Card.Text>
+                <div className="mb-3 font-weight-light">
+                    <div>Genre: {movie.Genre.Name}</div>
+                    <div>Director: {movie.Director.Name}</div>
                 </div>
-                <div className="movie-description">
-                    <span className="label">Description: </span>
-                    <span className="value">{movie.Description}</span>
+                <div className="text-center">
+                    <Button onClick={clearSelection}>Back</Button>
                 </div>
-
-                <div className="movie-genre">
-                    <span className="label">Genre: </span>
-                    <span className="value">{movie.Genre.Name}</span>
-                </div>
-                <div className="movie-director">
-                    <span className="label">Director: </span>
-                    <span className="value">{movie.Director.Name}</span>
-                </div>
-                <button onClick={clearSelection}>Back</button>
-            </div>
+            </Container>
         );
     }
 }

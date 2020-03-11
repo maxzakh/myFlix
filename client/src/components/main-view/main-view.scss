@@ -3,9 +3,7 @@
 }
 
 .container-movie-cards {
-    background-color: red;
-    // display: flex;
-    // flex-wrap: wrap;
-    // grid-template-rows: 2fr 2fr 2fr;
-    // gap: 1em;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
 }

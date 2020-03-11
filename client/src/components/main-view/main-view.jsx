@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Container, CardGroup } from 'react-bootstrap';
+import { Container, CardGroup, Grid } from 'react-bootstrap';
 import './main-view.scss';
 
 import { LoginView } from '../login-view/login-view';
@@ -74,13 +74,13 @@ export class MainView extends React.Component {
                             selectedMovie
                                 ? <MovieView movie={selectedMovie} clearSelection={ () => this.clearMovieSelection() } />
                                 : 
-                                    <CardGroup className='container-movie-cards'>
+                                    <div className='container-movie-cards'>
                                         {
                                             movies.map(movie => (
                                                 <MovieCard key={movie._id} movie={movie} onClick={movie => this.onMovieClick(movie)} />
                                             ))
                                         }
-                                    </CardGroup>
+                                    </div>
                         :
                             ''
                 }

@@ -1,12 +1,15 @@
-.movie-card {
-    background-color: red;
-    display: flex;
-    flex: 1 0 25%;
-}
-
 .card-img-top {
     width: 100%;
-    min-height: 400px;
+    // min-height: 400px;
+    // max-height: 400px;
     object-fit: cover;
 }
 
+.card-footer {
+    background-color: white;
+}
+
+.card-footer>.btn {
+    width: 100%;
+    background-color: rgb(190, 42, 42);
+}
