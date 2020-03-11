@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start:dev": "set USE_LOCAL=TRUE && node src/index.js",
+    "start:dev": "node src/index.js --local",
     "start": "node src/index.js"
   },
   "repository": {
@@ -23,6 +23,7 @@
     "express": "^4.17.1",
     "express-validator": "^6.4.0",
     "jsonwebtoken": "^8.5.1",
+    "minimist": "^1.2.3",
     "mongoose": "^5.9.2",
     "morgan": "^1.9.1",
     "passport": "^0.4.1",

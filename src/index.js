@@ -14,17 +14,20 @@ const app = express();
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-const auth = require('./auth.js')(app); // Make sure this is after bodyParser, app ensures Express is available in auth.js as well
 const cors = require('cors');
 app.use(cors());
+
+const auth = require('./auth.js')(app); // Make sure this is after bodyParser, app ensures Express is available in auth.js as well
+
+const argv = require('minimist')(process.argv.slice(2), {boolean: ['local']});
+const USE_LOCAL = argv.local;
 
 const Movies = Models.Movie;
 const Users = Models.User;
 
 const CONNECTION_REMOTE_URL = process.env.REMOTE;
 const CONNECTION_LOCAL_URL = 'mongodb://127.0.0.1:27017';
-const connectionUrl = process.env.USE_LOCAL ? CONNECTION_LOCAL_URL : CONNECTION_REMOTE_URL;
+const connectionUrl = USE_LOCAL ? CONNECTION_LOCAL_URL : CONNECTION_REMOTE_URL;
 
 mongoose.connect(connectionUrl, {
     useUnifiedTopology: true,
@@ -54,10 +57,10 @@ function createSearchObject(key, value) {
 
 // POST Requests
 app.post('/users',
-    [check('Username', 'Username is required').isLength({ min: 4 }),
-    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-    check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').isEmail()],
+    // [check('Username', 'Username is required').isLength({ min: 4 }),
+    // check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    // check('Password', 'Password is required').not().isEmpty(),
+    // check('Email', 'Email does not appear to be valid').isEmail()],
     (req, res) => {
 
         var errors = validationResult(req);
@@ -147,7 +150,7 @@ app.get('/users/:Username', (req, res) => {
         });
 });
 
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
         .then((movies) => {
             res.status(201).json(movies);
@@ -254,5 +257,5 @@ app.delete('/users/:Username/Movies/:MovieID',
 const port = process.env.PORT || 5500;
 
 app.listen(port, "0.0.0.0", () => {
-    console.log(`listening on port ${port} ${new Date()} ${process.env.USE_LOCAL ? 'locally' : 'remotely'}`);
+    console.log(`listening on port ${port} ${new Date()} ${USE_LOCAL ? 'locally' : 'remotely'}`);
 });

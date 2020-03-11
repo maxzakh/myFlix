@@ -1,15 +1,32 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
+import axios from 'axios';
+
 export function LoginView(props) {
-    const [ username, setUsername ] = useState('');
-    const [ password, setPassword ] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     console.log(username, password, e);
+    //     props.onLoggedIn(username);
+    // }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(username, password, e);
-        props.onLoggedIn(username);
-    }
+        axios.post('http://localhost:5500/login', {
+            Username: username,
+            Password: password
+        })
+            .then(response => {
+                const data = response.data;
+                props.onLoggedIn(data);
+            })
+            .catch(e => {
+                console.log('no such user')
+            });
+    };
 
     return (
         <Form>
