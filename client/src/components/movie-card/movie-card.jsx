@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 export class MovieCard extends React.Component {
     render() {
-        const { movie, onClick } = this.props;
+        const { movie } = this.props;
 
         return (
             <Card className='movie-card col-8 col-md-6 col-lg-4 mb-2'>
@@ -16,19 +16,18 @@ export class MovieCard extends React.Component {
                 <Card.Body>
                     <Card.Title>{movie.Title}</Card.Title>
                     <Card.Text>{movie.Description}</Card.Text>
-                    <Link to={'/movies/${movie._id}'}>
-                        <Button variant='link'>Open</Button>
-                    </Link>
+
                     <Link to={`/directors/${movie.Director.Name}`}>
                         <Button variant="link">Director</Button>
                     </Link>
-
                     <Link to={`/genres/${movie.Genre.Name}`}>
                         <Button variant="link">Genre</Button>
                     </Link>
                 </Card.Body>
                 <Card.Footer className='text-center'>
-                    <Button onClick={() => onClick(movie)}>View</Button>
+                    <Link to={`/movies/${movie._id}`}>
+                        <Button variant='link'>Open</Button>
+                    </Link>
                 </Card.Footer>
             </Card>
         );
@@ -40,6 +39,5 @@ MovieCard.propTypes = {
         Title: PropTypes.string.isRequired,
         Description: PropTypes.string.isRequired,
         ImagePath: PropTypes.string.isRequired
-    }).isRequired,
-    onClick: PropTypes.func.isRequired
+    }).isRequired
 };

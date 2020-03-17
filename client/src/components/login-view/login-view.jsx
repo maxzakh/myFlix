@@ -6,12 +6,7 @@ import axios from 'axios';
 export function LoginView(props) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     console.log(username, password, e);
-    //     props.onLoggedIn(username);
-    // }
+    const [errorMsg, setErrorMsg] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -24,7 +19,8 @@ export function LoginView(props) {
                 props.onLoggedIn(data);
             })
             .catch(e => {
-                console.log('no such user')
+                setErrorMsg(e.response.data.message);
+                console.log('Error:', e.response.data.message);
             });
     };
 
@@ -40,6 +36,16 @@ export function LoginView(props) {
             </Form.Group>
 
             <Button variant="primary" type="submit" onClick={handleSubmit}>Login</Button>
+            <Button onClick={() => {
+                window.location.href = '/';
+            }}>Cancel</Button>
+            {
+                errorMsg
+                    ?
+                        <div>{errorMsg}</div>
+                    :
+                        ""
+            }
         </Form>
     );
 }

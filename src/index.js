@@ -72,7 +72,7 @@ app.post('/users',
         Users.findOne({ Username: req.body.Username })
             .then(function (user) {
                 if (user) {
-                    return res.status(400).send(req.body.Username + "already exists");
+                    return res.status(400).send(`User ${req.body.Username} already exists`);
                 } else {
                     Users
                         .create({
@@ -257,5 +257,5 @@ app.delete('/users/:Username/Movies/:MovieID',
 const port = process.env.PORT || 5500;
 
 app.listen(port, "0.0.0.0", () => {
-    console.log(`listening on port ${port} ${new Date()} ${USE_LOCAL ? 'locally' : 'remotely'}`);
+    console.log(`listening on port ${port} ${new Date()} localhost with ${USE_LOCAL ? 'LOCAL' : 'REMOTE'} database`);
 });
