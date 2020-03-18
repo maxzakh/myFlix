@@ -16,11 +16,17 @@ export function LoginView(props) {
         })
             .then(response => {
                 const data = response.data;
+                console.log(data);
                 props.onLoggedIn(data);
             })
-            .catch(e => {
-                setErrorMsg(e.response.data.message);
-                console.log('Error:', e.response.data.message);
+            .catch(err => {
+                if (err.response) {
+                    setErrorMsg(err.response.data.message);
+                }
+                else {
+                    setErrorMsg(err);
+                }
+                // console.log('Error:', err.response.data.message);
             });
     };
 
