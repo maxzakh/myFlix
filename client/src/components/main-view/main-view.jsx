@@ -12,8 +12,8 @@ import { RegistrationView } from '../registration-view/registration-view';
 import { ProfileView } from '../profile-view/profile-view';
 import { DirectorView } from '../director-view/director-view';
 import { GenreView } from '../genre-view/genre-view';
-import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
+import { MovieList } from '../movie-list/movie-list';
 
 export function MainView() {
     const [movies, setMovies] = useState([]);
@@ -22,8 +22,9 @@ export function MainView() {
 
     useEffect(() => {
         let accessToken = localStorage.getItem('token');
-        if (accessToken !== null) {
+        if (accessToken) {
             setUsername(localStorage.getItem('user'));
+            setUser(JSON.parse(localStorage.getItem('userObj')));
             getMovies(accessToken);
         }
     }, []);
@@ -35,31 +36,42 @@ export function MainView() {
             .then(response => {
                 setMovies(response.data);
             })
-            .catch(function (error) {
-                console.log(error);
+            .catch(function (err) {
+                const msg = err.response ? err.response.data.message : err;
+                console.log("fetch movies failed", msg);
+                setMovies([]);
             });
     }
 
     function onLoggedIn(authData) {
-        console.log("onLoggedIn:", authData);
-
+        console.log("onLoggedIn: 1 ", authData.user);
+        
         setUsername(authData.user.Username);
+
+        console.log("onLoggedIn: 2 ", authData.user);
+
         setUser(authData.user);
+
+        console.log("onLoggedIn: 3 ", authData.user);
 
         localStorage.setItem('token', authData.token);
         localStorage.setItem('user', authData.user.Username);
+        localStorage.setItem('userObj', JSON.stringify(authData.user));
         getMovies(authData.token);
+
+        window.open('/', '_self');
     }
 
     function logOut() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('userObj');
 
         setUsername('');
         setUser(null);
     }
 
-    console.log("the current username is", username);
+    console.log(`Call render with: '${username}' user data:`, user);
 
     return (
         <Router>
@@ -67,9 +79,7 @@ export function MainView() {
                 <NavBar user={user} logOut={logOut} />
                 <Route exact path="/" render={() => {
                     if (user) {
-                        return movies.map(m => {
-                            return <MovieCard key={m._id} movie={m} />;
-                        })
+                        return <MovieList movies={movies} />
                     }
                     else {
                         return <FrontPageView />;
@@ -81,11 +91,7 @@ export function MainView() {
                             return onLoggedIn(authData);
                         }} />;
                     }
-                    window.location.href = '/';
-                    // <Redirect to='/' />
-                    // setTimeout(() => {
-                    //     window.location.href = '/';
-                    // }, 3000);
+                    <Redirect to='/' />
                 }
                 } />
                 <Route path="/register" render={() => {
