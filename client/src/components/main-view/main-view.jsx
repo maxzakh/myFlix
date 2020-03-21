@@ -15,6 +15,24 @@ import { GenreView } from '../genre-view/genre-view';
 import { MovieView } from '../movie-view/movie-view';
 import { MovieList } from '../movie-list/movie-list';
 
+const ProtectedRoute = ({
+    component: Component, user, ...rest
+  }) => {
+    return (
+        <Route
+            {...rest}
+            render={(props) => {
+                if (user) {
+                    return <Component {...props} user={user} />
+                }
+                else {
+                    return <Redirect to='/' />
+                }
+            }}
+        />
+    );
+};
+
 export function MainView() {
     const [movies, setMovies] = useState([]);
     const [username, setUsername] = useState('');
@@ -45,7 +63,7 @@ export function MainView() {
 
     function onLoggedIn(authData) {
         console.log("onLoggedIn: 1 ", authData.user);
-        
+
         setUsername(authData.user.Username);
 
         console.log("onLoggedIn: 2 ", authData.user);
@@ -91,59 +109,70 @@ export function MainView() {
                             return onLoggedIn(authData);
                         }} />;
                     }
-                    <Redirect to='/' />
+                    else {
+                        return <Redirect to='/' />
+                    }
                 }
                 } />
                 <Route path="/register" render={() => {
-                    if (user) {
-                        window.location.href = '/';
-                    }
-                    else {
+                    if (!user) {
                         return <RegistrationView />;
                     }
+                    else {
+                        return <Redirect to='/' />
+                    }
                 }} />
-                <Route path="/profile" render={() => {
+                {/* <Route path="/profile" render={() => {
                     if (user) {
                         return <ProfileView user={user} />
                     }
-                    window.location.href = '/';
-                }} />
-                <Route path="/movies/:movieId" render={({ match }) => {
+                    else {
+                        return <Redirect to='/' />
+                    }
+                }} /> */}
+                <ProtectedRoute path="/profile" component={ProfileView} user={user} />
+                <Route path="/movies/:movieId" render={(props) => {
                     if (user) {
                         return <MovieView
                             movie={movies.find(m => {
-                                return m._id === match.params.movieId;
+                                return m._id === props.match.params.movieId;
                             })}
                             clearSelection={() => {
-                                window.location.href = '/';
+                                props.history.push('/');
                             }}
                         />
                     }
-                    window.location.href = '/';
+                    else {
+                        return <Redirect to='/' />
+                    }
                 }} />
-                <Route exact path="/genres/:name" render={({ match }) => {
+                <Route exact path="/genres/:name" render={(props) => {
                     if (user) {
                         return <GenreView
                             movie={movies.find(m => {
-                                return m.Genre.Name === match.params.name;
+                                return m.Genre.Name === props.match.params.name;
                             })}
                             clearSelection={() => {
-                                window.location.href = '/';
+                                props.history.push('/');
                             }} />
                     }
-                    window.location.href = '/';
+                    else {
+                        return <Redirect to='/' />
+                    }
                 }} />
-                <Route exact path="/directors/:name" render={({ match }) => {
+                <Route exact path="/directors/:name" render={(props) => {
                     if (user) {
                         return <DirectorView
                             movie={movies.find(m => {
-                                return m.Director.Name === match.params.name;
+                                return m.Director.Name === props.match.params.name;
                             })}
                             clearSelection={() => {
-                                window.location.href = '/login';
+                                props.history.push('/');
                             }} />
                     }
-                    window.location.href = '/';
+                    else {
+                        return <Redirect to='/' />
+                    }
                 }} />
             </div>
         </Router>

@@ -37,7 +37,7 @@ export function RegistrationView(props) {
             Username: username,
             Password: password,
             Email: email,
-            Birdthday: birthday
+            Birthday: birthday
         })
             .then(res => {
                 const data = res.data;

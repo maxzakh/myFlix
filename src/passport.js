@@ -10,7 +10,7 @@ passport.use(new LocalStrategy({
     usernameField: 'Username',
     passwordField: 'Password'
 }, (username, password, done) => {
-    console.log(username + '  ' + password);
+    console.log(`Local Strategy '${username}' '${password}'`);
     Users.findOne({ Username: username }, (error, user) => {
         if (error) {
             console.log(error);
@@ -36,6 +36,7 @@ passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey: 'your_jwt_secret'
 }, (jwtPayload, callback) => {
+    console.log(`JWT Strategy`, JSON.stringify(jwtPayload, null, 4));
     return Users.findById(jwtPayload._id)
         .then((user) => {
             return callback(null, user);

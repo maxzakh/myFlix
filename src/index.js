@@ -80,6 +80,7 @@ app.post('/users',
                             Name: req.body.Name,
                             Password: hashedPassword,
                             Email: req.body.Email,
+                            Birthday: req.body.Birthday
                         })
                         .then(function (user) {
                             res.status(201).json(user)
