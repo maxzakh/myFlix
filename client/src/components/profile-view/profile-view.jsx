@@ -19,8 +19,16 @@ function GroupControl(props) {
     );
 }
 
+function MovieGrid(props) {
+    const { movies, favorites } = props;
+
+    return (
+        <div>movies</div>
+    );
+}
+
 export function ProfileView(props) {
-    const { user } = props;
+    const { user, movies } = props;
     console.log("profileview", user);
 
     const [username, setUsername] = useState(user.Username);
@@ -33,22 +41,13 @@ export function ProfileView(props) {
             <Row>
                 <Col>
                     <Form>
-                        <div>{user.Username}</div>
-                        <div>{username}</div>
-
                         <GroupControl label={'Username'} type={'text'} update={setUsername} value={username} placeholder={'Enter your new username'} />
-
                         <GroupControl label={'Password'} type={'password'} update={setPassword} value={password} placeholder={'Enter your password'} />
-
                         <GroupControl label={'Email'} type={'email'} update={setEmail} value={email} placeholder={'Enter your email'} />
-
                         <GroupControl label={'Birthday'} type={'date'} update={setBirthday} value={birthday} placeholder={'Enter your birthday'} />
 
-                        <div>{password}</div>
-                        <div>{email}</div>
-                        <div>{birthday}</div>
-
-                        {/* <div>{user.FavoriteMovies}</div> */}
+                        <MovieGrid movies={movies} favorites={user.FavoriteMovies} />
+                        <div>{user.FavoriteMovies}</div>
                         <Button>Save</Button>
                         <Button>Cancel</Button>
                     </Form>

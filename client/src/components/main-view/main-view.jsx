@@ -18,14 +18,12 @@ import { MovieList } from '../movie-list/movie-list';
 const ProtectedRoute = ({
     component: Component, ...rest
   }) => {
-    // console.log('ProtectedRoute', rest);
-    const { user } = rest;
     return (
         <Route
             {...rest}
             render={(props) => {
-                if (user) {
-                    return <Component {...props} user={user} />
+                if (rest.user) {
+                    return <Component {...props} {...rest} />
                 }
                 else {
                     return <Redirect to='/' />
@@ -133,7 +131,7 @@ export function MainView() {
                         return <Redirect to='/' />
                     }
                 }} /> */}
-                <ProtectedRoute path="/profile" component={ProfileView} user={user} />
+                <ProtectedRoute path="/profile" component={ProfileView} user={user} movies={movies} />
                 <Route path="/movies/:movieId" render={(props) => {
                     if (user) {
                         return <MovieView
