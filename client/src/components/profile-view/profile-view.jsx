@@ -2,6 +2,23 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, Row, Col, Form } from 'react-bootstrap';
 
+function GroupControl(props) {
+    const { label, type, value, update, placeholder } = props;
+    return (
+        <Form.Group>
+            <Form.Label>{label}</Form.Label>
+            <Form.Control
+                type={type}
+                onChange={(event) => {
+                    update(event.target.value);
+                }}
+                value={value}
+                placeholder={placeholder}
+            />
+        </Form.Group>
+    );
+}
+
 export function ProfileView(props) {
     const { user } = props;
     console.log("profileview", user);
@@ -19,61 +36,18 @@ export function ProfileView(props) {
                         <div>{user.Username}</div>
                         <div>{username}</div>
 
-                        <Form.Group>
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control
-                                type='text'
-                                onChange={(event) => {
-                                    setUsername(event.target.value);
-                                }} 
-                                value={username}
-                                placeholder='enter your username'
-                            />
-                        </Form.Group>
+                        <GroupControl label={'Username'} type={'text'} update={setUsername} value={username} placeholder={'Enter your new username'} />
 
-                        <Form.Group>
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control
-                                type='password'
-                                onChange={(event) => {
-                                    setPassword(event.target.value);
-                                }}
-                                value={password}
-                                placeholder='enter your new password'
-                            />
-                        </Form.Group>
+                        <GroupControl label={'Password'} type={'password'} update={setPassword} value={password} placeholder={'Enter your password'} />
 
-                        {/* <div>{user.Password}</div> */}
-                                    
-                        <Form.Group>
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control
-                                type='email'
-                                onChange={(event) => {
-                                    setEmail(event.target.value);
-                                }}
-                                value={email}
-                                placeholder='enter your email'
-                            />
-                        </Form.Group>
+                        <GroupControl label={'Email'} type={'email'} update={setEmail} value={email} placeholder={'Enter your email'} />
 
-                        <Form.Group>
-                            <Form.Label>Birthday</Form.Label>
-                            <Form.Control
-                                type="date"
-                                onChange={(event) => {
-                                    console.log(`setBirthday "${event.target.value}"`);
-                                    setBirthday(event.target.value);
-                                }}
-                                value={birthday}
-                                placeholder='enter your birthday'
-                            />
-                        </Form.Group>
+                        <GroupControl label={'Birthday'} type={'date'} update={setBirthday} value={birthday} placeholder={'Enter your birthday'} />
 
                         <div>{password}</div>
                         <div>{email}</div>
                         <div>{birthday}</div>
-                        
+
                         {/* <div>{user.FavoriteMovies}</div> */}
                         <Button>Save</Button>
                         <Button>Cancel</Button>
