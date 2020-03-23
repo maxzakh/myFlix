@@ -9,7 +9,7 @@ export function ProfileView(props) {
     const [username, setUsername] = useState(user.Username);
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState(user.Email);
-    const [birthday, setBirthday] = useState('2020-03-02');
+    const [birthday, setBirthday] = useState((user.Birthday || '').substr(0, 10));
 
     return (
         <div className="container">
