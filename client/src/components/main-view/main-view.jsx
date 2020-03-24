@@ -123,14 +123,6 @@ export function MainView() {
                     }
                 }} />
                 {/* <ProtectedRoute path="/register" component={RegistrationView} user={!user} /> */}
-                {/* <Route path="/profile" render={() => {
-                    if (user) {
-                        return <ProfileView user={user} />
-                    }
-                    else {
-                        return <Redirect to='/' />
-                    }
-                }} /> */}
                 <ProtectedRoute path="/profile" component={ProfileView} user={user} movies={movies} />
                 <Route path="/movies/:movieId" render={(props) => {
                     if (user) {
@@ -147,13 +139,7 @@ export function MainView() {
                 }} />
                 <Route exact path="/genres/:name" render={(props) => {
                     if (user) {
-                        return <GenreView
-                            movie={movies.find(m => {
-                                return m.Genre.Name === props.match.params.name;
-                            })}
-                            clearSelection={() => {
-                                props.history.push('/');
-                            }} />
+                        return <GenreView movie={movies.find(m => m.Genre.Name === props.match.params.name)} />
                     }
                     else {
                         return <Redirect to='/' />
@@ -161,13 +147,7 @@ export function MainView() {
                 }} />
                 <Route exact path="/directors/:name" render={(props) => {
                     if (user) {
-                        return <DirectorView
-                            movie={movies.find(m => {
-                                return m.Director.Name === props.match.params.name;
-                            })}
-                            clearSelection={() => {
-                                props.history.push('/');
-                            }} />
+                        return <DirectorView movie={movies.find(m => m.Director.Name === props.match.params.name)} />
                     }
                     else {
                         return <Redirect to='/' />

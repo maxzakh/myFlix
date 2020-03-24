@@ -1,15 +1,10 @@
 import React from 'react';
 import { Button, Card, Container } from 'react-bootstrap';
+import { useHistory } from 'react-router';
 
-export class GenreView extends React.Component {
-    constructor() {
-        super();
-
-        this.state = {};
-    }
-
-    render() {
-        const { movie, clearSelection } = this.props;
+export function GenreView(props) {
+        const { movie } = props;
+        const history = useHistory();
 
         if (!movie) return null;
 
@@ -22,11 +17,10 @@ export class GenreView extends React.Component {
                     </Card.Body>
                     <Card.Footer>
                         <div className="text-center">
-                            <Button onClick={clearSelection}>Back</Button>
+                            <Button onClick={() => history.goBack()}>Back</Button>
                         </div>
                     </Card.Footer>
                 </Card>
             </Container>
         )
-    }
 }
