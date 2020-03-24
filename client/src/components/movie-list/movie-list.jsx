@@ -6,7 +6,7 @@ export function MovieList(props) {
         props.movies.length
             ?
             props.movies.map(m => {
-                return <MovieCard key={m._id} movie={m} />;
+                return <MovieCard key={m._id} movie={m} showOpen={true} />;
             })
             :
             <div>No Movies</div>

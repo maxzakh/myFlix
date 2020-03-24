@@ -138,9 +138,7 @@ export function MainView() {
                             movie={movies.find(m => {
                                 return m._id === props.match.params.movieId;
                             })}
-                            clearSelection={() => {
-                                props.history.push('/');
-                            }}
+                            showOpen={false}
                         />
                     }
                     else {
