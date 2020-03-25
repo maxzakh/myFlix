@@ -6,9 +6,10 @@ import './movie-card.scss';
 
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router';
+import { Form } from 'react-bootstrap';
 
 export function MovieCard(props) {
-    const { movie, showOpen } = props;
+    const { movie, showOpen, onCheckbox } = props;
     const history = useHistory();
 
     function goBack() {
@@ -31,13 +32,21 @@ export function MovieCard(props) {
             </Card.Body>
             <Card.Footer className='text-center'>
                 {
-                    showOpen
+                    onCheckbox
                         ?
-                        <Link to={`/movies/${movie._id}`}>
-                            <Button variant='link'>Open</Button>
-                        </Link>
+                        <Form.Group>
+                            <Form.Check type='checkbox' label='Favorite' onClick={(event) => {
+                                onCheckbox(event.target.checked);
+                            }} />
+                        </Form.Group>
                         :
-                        <Button onClick={() => goBack()}>Back</Button>
+                        showOpen
+                            ?
+                            <Link to={`/movies/${movie._id}`}>
+                                <Button variant='link'>Open</Button>
+                            </Link>
+                            :
+                            <Button onClick={() => goBack()}>Back</Button>
                 }
             </Card.Footer>
         </Card>
