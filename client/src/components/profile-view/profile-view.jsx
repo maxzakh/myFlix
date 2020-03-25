@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, Row, Col, Form } from 'react-bootstrap';
 
+import { MovieCard } from '../movie-card/movie-card'; 
+
 function GroupControl(props) {
     const { label, type, value, update, placeholder } = props;
     return (
@@ -23,7 +25,15 @@ function MovieGrid(props) {
     const { movies, favorites } = props;
 
     return (
-        <div>movies</div>
+        <div>
+            {
+                movies.map(movie => {
+                    return (
+                        <MovieCard key={movie._id} movie={movie} />
+                    );
+                })
+            }
+        </div>
     );
 }
 
