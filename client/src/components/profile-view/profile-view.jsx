@@ -24,6 +24,10 @@ function GroupControl(props) {
 function MovieGrid(props) {
     const { movies, favorites } = props;
 
+    function isFavorite(id) {
+        return favorites.includes(id);
+    }
+
     function onCheckbox(checked) {
         console.log('checked', checked);
     }
@@ -33,7 +37,7 @@ function MovieGrid(props) {
             {
                 movies.map(movie => {
                     return (
-                        <MovieCard key={movie._id} movie={movie} onCheckbox={onCheckbox} />
+                        <MovieCard key={movie._id} movie={movie} favorite={isFavorite(movie._id)} setFavorite={onCheckbox} />
                     );
                 })
             }

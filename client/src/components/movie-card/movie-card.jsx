@@ -9,7 +9,7 @@ import { useHistory } from 'react-router';
 import { Form } from 'react-bootstrap';
 
 export function MovieCard(props) {
-    const { movie, showOpen, onCheckbox } = props;
+    const { movie, showOpen, favorite, setFavorite } = props;
     const history = useHistory();
 
     function goBack() {
@@ -32,11 +32,11 @@ export function MovieCard(props) {
             </Card.Body>
             <Card.Footer className='text-center'>
                 {
-                    onCheckbox
+                    setFavorite
                         ?
                         <Form.Group>
-                            <Form.Check type='checkbox' label='Favorite' onClick={(event) => {
-                                onCheckbox(event.target.checked);
+                            <Form.Check type='checkbox' label='Favorite' defaultChecked={favorite} onClick={(event) => {
+                                setFavorite(event.target.checked);
                             }} />
                         </Form.Group>
                         :
