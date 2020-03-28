@@ -89,6 +89,11 @@ export function MainView() {
         setUser(null);
     }
 
+    function updateUser(updatedUser) {
+        setUser(updateUser);
+        // TODO: update server, update local storage
+    }
+
     console.log(`Call render with: '${username}' user data:`, user);
 
     return (
@@ -123,7 +128,7 @@ export function MainView() {
                     }
                 }} />
                 {/* <ProtectedRoute path="/register" component={RegistrationView} user={!user} /> */}
-                <ProtectedRoute path="/profile" component={ProfileView} user={user} movies={movies} />
+                <ProtectedRoute path="/profile" component={ProfileView} user={user} setUser={updateUser} movies={movies} />
                 <Route path="/movies/:movieId" render={(props) => {
                     if (user) {
                         return <MovieView

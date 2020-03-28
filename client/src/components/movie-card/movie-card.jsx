@@ -36,7 +36,7 @@ export function MovieCard(props) {
                         ?
                         <Form.Group>
                             <Form.Check type='checkbox' label='Favorite' defaultChecked={favorite} onClick={(event) => {
-                                setFavorite(event.target.checked);
+                                setFavorite(movie._id, event.target.checked);
                             }} />
                         </Form.Group>
                         :
