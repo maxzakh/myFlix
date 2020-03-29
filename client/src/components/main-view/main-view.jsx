@@ -15,9 +15,11 @@ import { GenreView } from '../genre-view/genre-view';
 import { MovieView } from '../movie-view/movie-view';
 import { MovieList } from '../movie-list/movie-list';
 
+const SERVER_URL = 'http://localhost:5500';
+
 const ProtectedRoute = ({
     component: Component, ...rest
-  }) => {
+}) => {
     return (
         <Route
             {...rest}
@@ -38,6 +40,8 @@ export function MainView() {
     const [username, setUsername] = useState('');
     const [user, setUser] = useState(null);
 
+    const [token, setToken] = useState('');
+
     useEffect(() => {
         let accessToken = localStorage.getItem('token');
         if (accessToken) {
@@ -48,9 +52,7 @@ export function MainView() {
     }, []);
 
     function getMovies(token) {
-        axios.get('http://localhost:5500/movies', {
-            headers: { Authorization: `Bearer ${token}` }
-        })
+        axios.get(`${SERVER_URL}/movies`, { headers: { Authorization: `Bearer ${token}` } })
             .then(response => {
                 setMovies(response.data);
             })
@@ -90,11 +92,38 @@ export function MainView() {
     }
 
     function updateUser(updatedUser) {
-        setUser(updateUser);
+        // setUser(updateUser);
+        console.log("updated user", updatedUser);
         // TODO: update server, update local storage
     }
 
-    console.log(`Call render with: '${username}' user data:`, user);
+    function toggleFavorites(id) {
+        let favorites = user.FavoriteMovies;
+        let isFav = favorites.includes(id);
+        let newFavorites = !isFav ? [...favorites, id] : favorites.filter((itemId) => itemId !== id);
+
+        console.log("new favorites", newFavorites);
+
+        if (!isFav) {
+            axios.post(`${SERVER_URL}/users/${user.Username}/Movies/${id}`, null, { headers: { Authorization: `Bearer ${token}` } })
+                .then((response) => {
+                    console.log('response', response);
+                })
+                .catch(error => {
+                    console.log('error', error);
+                });
+        } else {
+            axios.delete(`${SERVER_URL}/users/${user.Username}/Movies/${id}`, { headers: { Authorization: `Bearer ${token}` } })
+                .then(response => {
+                    console.log('response', response);
+                })
+                .catch(error => {
+                    console.log('error', error);
+                });
+        }
+    }
+
+    // console.log(`Call render with: '${username}' user data:`, user);
 
     return (
         <Router>
@@ -128,7 +157,7 @@ export function MainView() {
                     }
                 }} />
                 {/* <ProtectedRoute path="/register" component={RegistrationView} user={!user} /> */}
-                <ProtectedRoute path="/profile" component={ProfileView} user={user} setUser={updateUser} movies={movies} />
+                <ProtectedRoute path="/profile" component={ProfileView} user={user} setUser={updateUser} movies={movies} toggleFavorites={toggleFavorites} />
                 <Route path="/movies/:movieId" render={(props) => {
                     if (user) {
                         return <MovieView

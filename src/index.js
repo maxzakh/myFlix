@@ -19,7 +19,7 @@ app.use(cors());
 
 const auth = require('./auth.js')(app); // Make sure this is after bodyParser, app ensures Express is available in auth.js as well
 
-const argv = require('minimist')(process.argv.slice(2), {boolean: ['local']});
+const argv = require('minimist')(process.argv.slice(2), { boolean: ['local'] });
 const USE_LOCAL = argv.local;
 
 const Movies = Models.Movie;
@@ -97,18 +97,22 @@ app.post('/users',
     });
 
 app.post('/users/:Username/Movies/:MovieID', (req, res) => {
-    Users.findOneAndUpdate({ Username: req.params.Username }, {
-        $push: { FavoriteMovies: req.params.MovieID }
-    },
+    Users.findOneAndUpdate(
+        {
+            Username: req.params.Username
+        }, {
+            $push: { FavoriteMovies: req.params.MovieID }
+        },
         { new: true },
         (err, updatedUser) => {
             if (err) {
                 console.error(err);
                 res.status(500).send("Error: " + err);
             } else {
-                res.json(updatedUser)
+                res.json(updatedUser);
             }
-        })
+        }
+    );
 });
 
 // GET Requests
