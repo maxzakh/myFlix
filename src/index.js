@@ -56,11 +56,13 @@ function createSearchObject(key, value) {
 }
 
 // POST Requests
-app.post('/users',
-    // [check('Username', 'Username is required').isLength({ min: 4 }),
-    // check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-    // check('Password', 'Password is required').not().isEmpty(),
-    // check('Email', 'Email does not appear to be valid').isEmail()],
+app.post('/users', [
+        check('Username', 'Username is required').isLength({ min: 4 }),
+        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+        check('Password', 'Password is required').not().isEmpty(),
+        check('Password', 'Password is required').isLength({ min: 4 }),
+        check('Email', 'Email does not appear to be valid').isEmail()
+    ],
     (req, res) => {
 
         var errors = validationResult(req);
@@ -101,8 +103,8 @@ app.post('/users/:Username/Movies/:MovieID', (req, res) => {
         {
             Username: req.params.Username
         }, {
-            $push: { FavoriteMovies: req.params.MovieID }
-        },
+        $push: { FavoriteMovies: req.params.MovieID }
+    },
         { new: true },
         (err, updatedUser) => {
             if (err) {

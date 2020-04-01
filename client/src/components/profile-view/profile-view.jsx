@@ -62,12 +62,21 @@ export function ProfileView(props) {
         };
 
         // TODO: validate user data: 
-        //      username not empty
+        //      username min 4 chars
         //      username unique
-        //      password not empty
-        //      password not empty
+        //      username alphanumeric
+        //      password min 4 chars
         //      email valid
         //      birthday not empty
+        /*
+        [
+        check('Username', 'Username is required').isLength({ min: 4 }),
+        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+        check('Password', 'Password is required').not().isEmpty(),
+        check('Password', 'Password is required').isLength({ min: 4 }),
+        check('Email', 'Email does not appear to be valid').isEmail()
+        ]
+        */
 
         setUser(newUser);
     }

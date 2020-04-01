@@ -100,27 +100,23 @@ export function MainView() {
     function toggleFavorites(id) {
         let favorites = user.FavoriteMovies;
         let isFav = favorites.includes(id);
-        let newFavorites = !isFav ? [...favorites, id] : favorites.filter((itemId) => itemId !== id);
 
-        console.log("new favorites", newFavorites);
+        // let newFavorites = !isFav ? [...favorites, id] : favorites.filter((itemId) => itemId !== id);
+        // console.log("new favorites", newFavorites);
 
-        if (!isFav) {
-            axios.post(`${SERVER_URL}/users/${user.Username}/Movies/${id}`, null, { headers: { Authorization: `Bearer ${token}` } })
-                .then((response) => {
-                    console.log('response', response);
-                })
-                .catch(error => {
-                    console.log('error', error);
-                });
-        } else {
-            axios.delete(`${SERVER_URL}/users/${user.Username}/Movies/${id}`, { headers: { Authorization: `Bearer ${token}` } })
-                .then(response => {
-                    console.log('response', response);
-                })
-                .catch(error => {
-                    console.log('error', error);
-                });
-        }
+        const del = (url, options) => axios.delete(url, options);
+        const add = (url, options) => axios.post(url, null, options);
+
+        const opperation = isFav ? del : add;
+
+        opperation(`${SERVER_URL}/users/${user.Username}/Movies/${id}`, { headers: { Authorization: `Bearer ${token}` } })
+            .then(response => {
+                console.log('response', response);
+                setUser(response.data);
+            })
+            .catch(error => {
+                console.log('error', error);
+            });
     }
 
     // console.log(`Call render with: '${username}' user data:`, user);
