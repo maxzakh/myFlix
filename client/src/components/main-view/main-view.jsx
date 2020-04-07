@@ -63,20 +63,22 @@ export function MainView() {
             });
     }
 
+    function setAuthData(userObj, token = undefined) {
+        setUsername(userObj.Username);
+        setUser(userObj);
+
+        localStorage.setItem('user', userObj.Username);
+        localStorage.setItem('userObj', JSON.stringify(userObj));
+
+        if (token) {
+            setToken(token);
+            localStorage.setItem('token', token);
+        }
+    }
+
     function onLoggedIn(authData) {
-        console.log("onLoggedIn: 1 ", authData.user);
+        setAuthData(authData.user, authData.token);
 
-        setUsername(authData.user.Username);
-
-        console.log("onLoggedIn: 2 ", authData.user);
-
-        setUser(authData.user);
-
-        console.log("onLoggedIn: 3 ", authData.user);
-
-        localStorage.setItem('token', authData.token);
-        localStorage.setItem('user', authData.user.Username);
-        localStorage.setItem('userObj', JSON.stringify(authData.user));
         getMovies(authData.token);
 
         window.open('/', '_self');
@@ -112,7 +114,7 @@ export function MainView() {
         opperation(`${SERVER_URL}/users/${user.Username}/Movies/${id}`, { headers: { Authorization: `Bearer ${token}` } })
             .then(response => {
                 console.log('response', response);
-                setUser(response.data);
+                setAuthData(response.data);
             })
             .catch(error => {
                 console.log('error', error);

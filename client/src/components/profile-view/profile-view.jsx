@@ -4,8 +4,33 @@ import { Button, Row, Col, Form } from 'react-bootstrap';
 
 import { MovieCard } from '../movie-card/movie-card';
 
+function inputControl(label, type, value, update, options, feedback) {
+    if (!feedback) {
+        feedback = `Enter your ${label.toLowerCase()}`;
+    }
+
+    return (
+        <Form.Group>
+            <Form.Label>{label}</Form.Label>
+            <Form.Control
+                type={type}
+                onChange={(event) => {
+                    update(event.target.value);
+                }}
+                value={value}
+                placeholder={feedback}
+                {...options}
+            />
+            <Form.Control.Feedback type={"invalid"}>
+                {feedback}
+            </Form.Control.Feedback>
+        </Form.Group>
+    );
+}
+
 function GroupControl(props) {
     const { label, type, value, update, placeholder } = props;
+
     return (
         <Form.Group>
             <Form.Label>{label}</Form.Label>
@@ -16,6 +41,8 @@ function GroupControl(props) {
                 }}
                 value={value}
                 placeholder={placeholder}
+                required
+                minLength="8"
             />
         </Form.Group>
     );
@@ -49,11 +76,13 @@ export function ProfileView(props) {
     const [email, setEmail] = useState(user.Email);
     const [birthday, setBirthday] = useState((user.Birthday || '').substr(0, 10));
 
+    const [validated, setValidated] = useState(false);
+
     function validateUserData() {
 
     }
 
-    function handleSave() {
+    function handleSave(event) {
         let newUser = {
             Username: username,
             Password: password,
@@ -78,19 +107,35 @@ export function ProfileView(props) {
         ]
         */
 
-        setUser(newUser);
+        const form = event.target;
+        if (!form.checkValidity()) {
+            event.preventDefault();
+        }
+
+        setValidated(true);
+
+        if (newUser.length > 3) {
+            // setUser(newUser);
+        } else {
+            console.log('username not long enough')
+        }
     }
 
     return (
         <div className="container">
             <Row>
                 <Col>
-                    <Form>
-                        <GroupControl label={'Username'} type={'text'} update={setUsername} value={username} placeholder={'Enter your new username'} />
+                    <Form noValidate validated={validated}>
+                        {inputControl('Username', 'text', username, setUsername, { required: true, minLength: 8 })}
+                        {inputControl('Password', 'password', password, setPassword, { required: true, minLength: 8 })}
+                        {inputControl('Email', 'email', email, setEmail, { required: true, minLength: 8 })}
+                        {inputControl('Birthday', 'date', birthday, setBirthday, { required: true })}
+
+                        {/* <GroupControl label={'Username'} type={'text'} update={setUsername} value={username} placeholder={'Enter your new username'} />
                         <GroupControl label={'Password'} type={'password'} update={setPassword} value={password} placeholder={'Enter your password'} />
                         <GroupControl label={'Email'} type={'email'} update={setEmail} value={email} placeholder={'Enter your email'} />
                         <GroupControl label={'Birthday'} type={'date'} update={setBirthday} value={birthday} placeholder={'Enter your birthday'} />
-
+ */}
                         <Button onClick={handleSave}>Save</Button>
                         <Button>Cancel</Button>
                     </Form>
