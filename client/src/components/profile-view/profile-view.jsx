@@ -76,6 +76,7 @@ export function ProfileView(props) {
     const [email, setEmail] = useState(user.Email);
     const [birthday, setBirthday] = useState((user.Birthday || '').substr(0, 10));
 
+    const [orgUsername, setOrgUsername] = useState(user.Username);
     const [validated, setValidated] = useState(false);
 
     function validateUserData() {
@@ -83,6 +84,25 @@ export function ProfileView(props) {
     }
 
     function handleSave(event) {
+        /*
+            Server will validate user data as: 
+             username min 4 chars
+             username unique
+             username alphanumeric
+             password min 4 chars
+             email valid
+             birthday not empty
+         */
+
+        const form = event.target;
+        let isValid = form.checkValidity();
+        setValidated(true);
+
+        if (!isValid) {
+            event.preventDefault();
+            return;
+        }
+
         let newUser = {
             Username: username,
             Password: password,
@@ -90,29 +110,19 @@ export function ProfileView(props) {
             Birthday: birthday
         };
 
-        // TODO: validate user data: 
-        //      username min 4 chars
-        //      username unique
-        //      username alphanumeric
-        //      password min 4 chars
-        //      email valid
-        //      birthday not empty
-        /*
-        [
-        check('Username', 'Username is required').isLength({ min: 4 }),
-        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-        check('Password', 'Password is required').not().isEmpty(),
-        check('Password', 'Password is required').isLength({ min: 4 }),
-        check('Email', 'Email does not appear to be valid').isEmail()
-        ]
-        */
+        const url = `http://localhost:5500/users/${orgUsername}`;
+        axios.put(url, newUser /* , config */)
+            .then((res) => {
+                let {user, token} = res.data;
+                console.log(user);
+                setUser(user, token);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+        ;
 
-        const form = event.target;
-        if (!form.checkValidity()) {
-            event.preventDefault();
-        }
-
-        setValidated(true);
+        // setOrgUsername() if call succeeded 
 
         if (newUser.length > 3) {
             // setUser(newUser);
@@ -126,9 +136,9 @@ export function ProfileView(props) {
             <Row>
                 <Col>
                     <Form noValidate validated={validated}>
-                        {inputControl('Username', 'text', username, setUsername, { required: true, minLength: 8 })}
-                        {inputControl('Password', 'password', password, setPassword, { required: true, minLength: 8 })}
-                        {inputControl('Email', 'email', email, setEmail, { required: true, minLength: 8 })}
+                        {inputControl('Username', 'text', username, setUsername, { required: true, pattern: '[a-zA-Z0-9_]{8,}' })}
+                        {inputControl('Password', 'password', password, setPassword, { required: true, pattern: '[\S\ ]{3,}' })}
+                        {inputControl('Email', 'email', email, setEmail, { required: true, pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$' })}
                         {inputControl('Birthday', 'date', birthday, setBirthday, { required: true })}
 
                         {/* <GroupControl label={'Username'} type={'text'} update={setUsername} value={username} placeholder={'Enter your new username'} />

@@ -9,6 +9,7 @@ require('./passport.js');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 const { check, validationResult } = require('express-validator');
+const generateJWTToken = require('./auth-jwt');
 
 const app = express();
 app.use(morgan('dev'));
@@ -206,7 +207,13 @@ app.get('/movies/directors/:Name', (req, res) => {
 });
 
 // UPDATE Requests
-app.put('/users/:Username', (req, res) => {
+app.put('/users/:Username', [
+    check('Username', 'Username is required').isLength({ min: 4 }),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Password', 'Password is required').isLength({ min: 4 }),
+    check('Email', 'Email does not appear to be valid').isEmail()
+], (req, res) => {
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $set:
         {
@@ -222,7 +229,8 @@ app.put('/users/:Username', (req, res) => {
                 console.error(err);
                 res.status(500).send("Error: " + err);
             } else {
-                res.json(updatedUser)
+                let token = generateJWTToken(updatedUser.toJSON());
+                res.json({user: updatedUser, token});
             }
         })
 });
