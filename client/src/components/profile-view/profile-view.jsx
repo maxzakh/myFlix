@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, Row, Col, Form } from 'react-bootstrap';
+import { Button, Row, Col, Form, Toast } from 'react-bootstrap';
 
 import { MovieCard } from '../movie-card/movie-card';
 
@@ -79,9 +79,7 @@ export function ProfileView(props) {
     const [orgUsername, setOrgUsername] = useState(user.Username);
     const [validated, setValidated] = useState(false);
 
-    function validateUserData() {
-
-    }
+    const [showErrorDuplicated, setShowErrorDuplicated] = useState(false);
 
     function handleSave(event) {
         /*
@@ -96,10 +94,10 @@ export function ProfileView(props) {
 
         const form = event.target;
         let isValid = form.checkValidity();
-        setValidated(true);
 
         if (!isValid) {
             event.preventDefault();
+            setValidated(true);
             return;
         }
 
@@ -113,31 +111,32 @@ export function ProfileView(props) {
         const url = `http://localhost:5500/users/${orgUsername}`;
         axios.put(url, newUser /* , config */)
             .then((res) => {
-                let {user, token} = res.data;
+                let { user, token } = res.data;
                 console.log(user);
                 setUser(user, token);
+                setOrgUsername(user.Username);
             })
             .catch((error) => {
                 console.log(error);
-            })
-        ;
-
-        // setOrgUsername() if call succeeded 
-
-        if (newUser.length > 3) {
-            // setUser(newUser);
-        } else {
-            console.log('username not long enough')
-        }
+                setShowErrorDuplicated(true);
+                setValidated(false);
+            });
     }
 
     return (
         <div className="container">
+            <Toast onClose={() => setShowErrorDuplicated(false)} show={showErrorDuplicated} delay={10000} autohide>
+                <Toast.Header>
+                    <strong className="mr-auto">Error</strong>
+                </Toast.Header>
+                <Toast.Body>Username already exists</Toast.Body>
+            </Toast>
+
             <Row>
                 <Col>
                     <Form noValidate validated={validated}>
                         {inputControl('Username', 'text', username, setUsername, { required: true, pattern: '[a-zA-Z0-9_]{8,}' })}
-                        {inputControl('Password', 'password', password, setPassword, { required: true, pattern: '[\S\ ]{3,}' })}
+                        {inputControl('Password', 'password', password, setPassword, { required: true, pattern: '[\S]{3,}' })}
                         {inputControl('Email', 'email', email, setEmail, { required: true, pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$' })}
                         {inputControl('Birthday', 'date', birthday, setBirthday, { required: true })}
 

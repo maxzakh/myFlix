@@ -59,12 +59,12 @@ function createSearchObject(key, value) {
 
 // POST Requests
 app.post('/users', [
-        check('Username', 'Username is required').isLength({ min: 4 }),
-        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-        check('Password', 'Password is required').not().isEmpty(),
-        check('Password', 'Password is required').isLength({ min: 4 }),
-        check('Email', 'Email does not appear to be valid').isEmail()
-    ],
+    check('Username', 'Username is required').isLength({ min: 4 }),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Password', 'Password is required').isLength({ min: 4 }),
+    check('Email', 'Email does not appear to be valid').isEmail()
+],
     (req, res) => {
 
         var errors = validationResult(req);
@@ -215,26 +215,45 @@ app.put('/users/:Username', [
     check('Password', 'Password is required').isLength({ min: 4 }),
     check('Email', 'Email does not appear to be valid').isEmail()
 ], (req, res) => {
-    var hashedPassword = Users.hashPassword(req.body.Password);
-    Users.findOneAndUpdate({ Username: req.params.Username }, {
-        $set:
-        {
-            Username: req.body.Username,
-            Password: hashedPassword,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
-        }
-    },
-        { new: true },
-        (err, updatedUser) => {
+    let oldName = req.params.Username;
+    let newName = req.body.Username;
+
+    function updateUser() {
+        var hashedPassword = Users.hashPassword(req.body.Password);
+        Users.findOneAndUpdate({ Username: oldName }, {
+            $set: {
+                Username: newName,
+                Password: hashedPassword,
+                Email: req.body.Email,
+                Birthday: req.body.Birthday
+            }
+        }, { new: true }, (err, updatedUser) => {
             if (err) {
                 console.error(err);
                 res.status(500).send("Error: " + err);
-            } else {
-                let token = generateJWTToken(updatedUser.toJSON());
-                res.json({user: updatedUser, token});
             }
-        })
+            else {
+                let token = generateJWTToken(updatedUser.toJSON());
+                res.json({ user: updatedUser, token });
+            }
+        });
+    }
+
+    if (oldName !== newName) {
+        Users.findOne({ Username: newName })
+            .then(function (user) {
+                if (user) {
+                    return res.status(400).send(`User ${newName} already exists`);
+                } else {
+                    updateUser();
+                }
+            }).catch(function (error) {
+                console.error(error);
+                res.status(500).send("Error: " + error);
+            });
+    } else {
+        updateUser();
+    }
 });
 
 // DELETE Requests

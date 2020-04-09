@@ -93,9 +93,9 @@ export function MainView() {
         setUser(null);
     }
 
-    function updateUser(updatedUser, token) {
-        setUser(updateUser, token);
-        console.log("updated user", updatedUser);
+    function updateUser(user, token) {
+        setUser(user, token);
+        console.log("updated user", user);
         // TODO: update server, update local storage
     }
 
