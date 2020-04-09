@@ -27,12 +27,13 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 const CONNECTION_REMOTE_URL = process.env.REMOTE;
-const CONNECTION_LOCAL_URL = 'mongodb://127.0.0.1:27017';
+const CONNECTION_LOCAL_URL = 'mongodb://127.0.0.1:27017/myFlixDB';
 const connectionUrl = USE_LOCAL ? CONNECTION_LOCAL_URL : CONNECTION_REMOTE_URL;
 
 mongoose.connect(connectionUrl, {
     useUnifiedTopology: true,
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useFindAndModify: false
 });
 
 // var allowedOrigins = ['http://localhost:5500', 'movies-my-flix.herokuapp.com/'];
@@ -214,11 +215,12 @@ app.put('/users/:Username', [
     check('Password', 'Password is required').isLength({ min: 4 }),
     check('Email', 'Email does not appear to be valid').isEmail()
 ], (req, res) => {
+    var hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $set:
         {
             Username: req.body.Username,
-            Password: req.body.Password,
+            Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday
         }
