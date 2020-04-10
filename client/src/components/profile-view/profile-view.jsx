@@ -28,26 +28,6 @@ function inputControl(label, type, value, update, options, feedback) {
     );
 }
 
-function GroupControl(props) {
-    const { label, type, value, update, placeholder } = props;
-
-    return (
-        <Form.Group>
-            <Form.Label>{label}</Form.Label>
-            <Form.Control
-                type={type}
-                onChange={(event) => {
-                    update(event.target.value);
-                }}
-                value={value}
-                placeholder={placeholder}
-                required
-                minLength="8"
-            />
-        </Form.Group>
-    );
-}
-
 function MovieGrid(props) {
     const { movies, favorites, toggleFavorites } = props;
 
@@ -69,14 +49,14 @@ function MovieGrid(props) {
 }
 
 export function ProfileView(props) {
-    const { user, setUser, movies, toggleFavorites } = props;
+    const { user, setUser, movies, toggleFavorites, unregister, token } = props;
 
     const [username, setUsername] = useState(user.Username);
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState(user.Email);
     const [birthday, setBirthday] = useState((user.Birthday || '').substr(0, 10));
 
-    const [orgUsername, setOrgUsername] = useState(user.Username);
+    const [orgUsername, setOrgUsername] = useState(user.Username); // Last used username
     const [validated, setValidated] = useState(false);
 
     const [showErrorDuplicated, setShowErrorDuplicated] = useState(false);
@@ -109,7 +89,9 @@ export function ProfileView(props) {
         };
 
         const url = `http://localhost:5500/users/${orgUsername}`;
-        axios.put(url, newUser /* , config */)
+        let config = { headers: { Authorization: `Bearer ${token}` } };
+
+        axios.put(url, newUser, config)
             .then((res) => {
                 let { user, token } = res.data;
                 console.log(user);
@@ -121,6 +103,30 @@ export function ProfileView(props) {
                 setShowErrorDuplicated(true);
                 setValidated(false);
             });
+    }
+
+    function handleCancel(event) {
+        event.preventDefault();
+        setUsername(orgUsername);
+        setPassword('');
+        setEmail(user.Email);
+        setBirthday((user.Birthday || '').substr(0, 10));
+    }
+
+    function handleUnregister(event) {
+        let agree = confirm('Are you sure you want to leave our service?\nThis action cannot be undone.');
+        if (agree) {
+            let url = `http://localhost:5500/users/${orgUsername}`;
+            let config = { headers: { Authorization: `Bearer ${token}` } };
+            axios.delete(url, config)
+                .then(res => {
+                    unregister();
+                })
+                .catch(error => {
+                    error && error.response && error.response.data ? console.log(error.response.data) : console.log(error)
+                    // console.log('error unregistering the user.', error.response.data);
+                });
+        }
     }
 
     return (
@@ -140,17 +146,12 @@ export function ProfileView(props) {
                         {inputControl('Email', 'email', email, setEmail, { required: true, pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$' })}
                         {inputControl('Birthday', 'date', birthday, setBirthday, { required: true })}
 
-                        {/* <GroupControl label={'Username'} type={'text'} update={setUsername} value={username} placeholder={'Enter your new username'} />
-                        <GroupControl label={'Password'} type={'password'} update={setPassword} value={password} placeholder={'Enter your password'} />
-                        <GroupControl label={'Email'} type={'email'} update={setEmail} value={email} placeholder={'Enter your email'} />
-                        <GroupControl label={'Birthday'} type={'date'} update={setBirthday} value={birthday} placeholder={'Enter your birthday'} />
- */}
                         <Button onClick={handleSave}>Save</Button>
-                        <Button>Cancel</Button>
+                        <Button onClick={handleCancel}>Cancel</Button>
                     </Form>
                 </Col>
                 <Col>
-                    <Button>Unregister</Button>
+                    <Button onClick={handleUnregister}>Unregister</Button>
                 </Col>
             </Row>
             <Row>

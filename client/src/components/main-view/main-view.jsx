@@ -48,6 +48,7 @@ export function MainView() {
             setUsername(localStorage.getItem('user'));
             setUser(JSON.parse(localStorage.getItem('userObj')));
             getMovies(accessToken);
+            setToken(accessToken);
         }
     }, []);
 
@@ -155,7 +156,7 @@ export function MainView() {
                     }
                 }} />
                 {/* <ProtectedRoute path="/register" component={RegistrationView} user={!user} /> */}
-                <ProtectedRoute path="/profile" component={ProfileView} user={user} setUser={updateUser} movies={movies} toggleFavorites={toggleFavorites} />
+                <ProtectedRoute path="/profile" component={ProfileView} user={user} setUser={updateUser} movies={movies} toggleFavorites={toggleFavorites} unregister={logOut} token={token} />
                 <Route path="/movies/:movieId" render={(props) => {
                     if (user) {
                         return <MovieView
