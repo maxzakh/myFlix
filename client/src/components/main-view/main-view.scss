@@ -1,3 +1,13 @@
+.main-view {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 3em 1fr;
+}
+
+// .nav-bar-container {
+
+// }
+
 .container-login-view {
     width: 26em;
 }

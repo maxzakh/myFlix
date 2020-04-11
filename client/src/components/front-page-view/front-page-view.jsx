@@ -5,9 +5,9 @@ import './front-page-view.scss';
 
 export function FrontPageView(props) {
     return (
-        <div className='front-page-container'>
+        <div className='front-page-container col-8-md-auto'>
             <Container>
-                <div>Front page view for no user</div>
+                <div className='greeting'>Front page view for no user</div>
             </Container>
         </div>
     )

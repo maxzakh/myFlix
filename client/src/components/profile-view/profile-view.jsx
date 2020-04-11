@@ -124,6 +124,7 @@ export function ProfileView(props) {
                 })
                 .catch(error => {
                     error && error.response && error.response.data ? console.log(error.response.data) : console.log(error)
+                    // console.log(error.response && error.response.data || error)
                     // console.log('error unregistering the user.', error.response.data);
                 });
         }

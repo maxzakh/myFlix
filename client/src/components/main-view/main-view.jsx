@@ -128,64 +128,66 @@ export function MainView() {
         <Router>
             <div className="main-view">
                 <NavBar user={user} logOut={logOut} />
-                <Route exact path="/" render={() => {
-                    if (user) {
-                        return <MovieList movies={movies} />
+                <div className="main-content">
+                    <Route exact path="/" render={() => {
+                        if (user) {
+                            return <MovieList movies={movies} />
+                        }
+                        else {
+                            return <FrontPageView />;
+                        }
+                    }} />
+                    <Route exact path="/login" render={() => {
+                        if (!username) {
+                            return <LoginView onLoggedIn={authData => {
+                                return onLoggedIn(authData);
+                            }} />;
+                        }
+                        else {
+                            return <Redirect to='/' />
+                        }
                     }
-                    else {
-                        return <FrontPageView />;
-                    }
-                }} />
-                <Route exact path="/login" render={() => {
-                    if (!username) {
-                        return <LoginView onLoggedIn={authData => {
-                            return onLoggedIn(authData);
-                        }} />;
-                    }
-                    else {
-                        return <Redirect to='/' />
-                    }
-                }
-                } />
-                <Route path="/register" render={() => {
-                    if (!user) {
-                        return <RegistrationView />;
-                    }
-                    else {
-                        return <Redirect to='/' />
-                    }
-                }} />
-                {/* <ProtectedRoute path="/register" component={RegistrationView} user={!user} /> */}
-                <ProtectedRoute path="/profile" component={ProfileView} user={user} setUser={updateUser} movies={movies} toggleFavorites={toggleFavorites} unregister={logOut} token={token} />
-                <Route path="/movies/:movieId" render={(props) => {
-                    if (user) {
-                        return <MovieView
-                            movie={movies.find(m => {
-                                return m._id === props.match.params.movieId;
-                            })}
-                            showOpen={false}
-                        />
-                    }
-                    else {
-                        return <Redirect to='/' />
-                    }
-                }} />
-                <Route exact path="/genres/:name" render={(props) => {
-                    if (user) {
-                        return <GenreView movie={movies.find(m => m.Genre.Name === props.match.params.name)} />
-                    }
-                    else {
-                        return <Redirect to='/' />
-                    }
-                }} />
-                <Route exact path="/directors/:name" render={(props) => {
-                    if (user) {
-                        return <DirectorView movie={movies.find(m => m.Director.Name === props.match.params.name)} />
-                    }
-                    else {
-                        return <Redirect to='/' />
-                    }
-                }} />
+                    } />
+                    <Route path="/register" render={() => {
+                        if (!user) {
+                            return <RegistrationView />;
+                        }
+                        else {
+                            return <Redirect to='/' />
+                        }
+                    }} />
+                    {/* <ProtectedRoute path="/register" component={RegistrationView} user={!user} /> */}
+                    <ProtectedRoute path="/profile" component={ProfileView} user={user} setUser={updateUser} movies={movies} toggleFavorites={toggleFavorites} unregister={logOut} token={token} />
+                    <Route path="/movies/:movieId" render={(props) => {
+                        if (user) {
+                            return <MovieView
+                                movie={movies.find(m => {
+                                    return m._id === props.match.params.movieId;
+                                })}
+                                showOpen={false}
+                            />
+                        }
+                        else {
+                            return <Redirect to='/' />
+                        }
+                    }} />
+                    <Route exact path="/genres/:name" render={(props) => {
+                        if (user) {
+                            return <GenreView movie={movies.find(m => m.Genre.Name === props.match.params.name)} />
+                        }
+                        else {
+                            return <Redirect to='/' />
+                        }
+                    }} />
+                    <Route exact path="/directors/:name" render={(props) => {
+                        if (user) {
+                            return <DirectorView movie={movies.find(m => m.Director.Name === props.match.params.name)} />
+                        }
+                        else {
+                            return <Redirect to='/' />
+                        }
+                    }} />
+                </div>
             </div>
         </Router>
     );
