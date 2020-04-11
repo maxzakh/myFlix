@@ -1,5 +1,9 @@
 .nav-bar-container {
     display: flex;
     justify-content: flex-end;
-    background-color: red;
+    align-items: center;
+}
+
+.nav-bar-container span {
+    margin-right: .5em;
 }
