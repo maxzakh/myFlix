@@ -1,14 +1,15 @@
 import React from 'react';
-import { Container, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import './front-page-view.scss';
+import welcome from '../../assets/images/undraw_web_search_eetr.svg';
 
 export function FrontPageView(props) {
     return (
-        <div className='front-page-container col-8-md-auto'>
-            <Container>
-                <div className='greeting'>Front page view for no user</div>
-            </Container>
-        </div>
+        <Container className='frontpage-body'>
+            {/* <div className='greeting-image'></div> */}
+            <img src={welcome} alt="" className='greeting-image'/>
+            <div className='greeting'>Login to view movies</div>
+        </Container>
     )
 }
