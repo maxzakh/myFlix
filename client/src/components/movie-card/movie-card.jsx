@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -9,7 +9,7 @@ import { useHistory } from 'react-router';
 import { Form } from 'react-bootstrap';
 
 export function MovieCard(props) {
-    const { movie, showOpen, favorite, setFavorite } = props;
+    const { movie, showOpen: inList, favorite, setFavorite } = props;
     const history = useHistory();
 
     function goBack() {
@@ -17,20 +17,14 @@ export function MovieCard(props) {
     }
 
     return (
-        <Card className='movie-card col-8 col-md-6 col-lg-4 mb-2'>
-            <Card.Img variant="top" src={movie.ImagePath} />
-            <Card.Body>
-                <Card.Title>{movie.Title}</Card.Title>
-                <Card.Text>{movie.Description}</Card.Text>
+        <Card className='movie-card shadow-sm'>
+            <div className='card-body'>
+                <Card.Img className='mx-auto' variant="top" src={movie.ImagePath} />
+                {inList ? <h6>{movie.Title}</h6> : <h5>{movie.Title}</h5>}
+            </div>
 
-                <Link to={`/directors/${movie.Director.Name}`}>
-                    <Button variant="link">Director</Button>
-                </Link>
-                <Link to={`/genres/${movie.Genre.Name}`}>
-                    <Button variant="link">Genre</Button>
-                </Link>
-            </Card.Body>
-            <Card.Footer className='text-center'>
+            {!inList && <Card.Text>{movie.Description}</Card.Text>}
+            <div className='card-bottom'>
                 {
                     setFavorite
                         ?
@@ -40,15 +34,28 @@ export function MovieCard(props) {
                             }} />
                         </Form.Group>
                         :
-                        showOpen
+                        inList
                             ?
                             <Link to={`/movies/${movie._id}`}>
-                                <Button variant='link'>Open</Button>
+                                <Button variant='link'>Details</Button>
                             </Link>
                             :
-                            <Button onClick={() => goBack()}>Back</Button>
+                            <Fragment>
+                                {
+                                    !inList &&
+                                    <div>
+                                        <Link to={`/directors/${movie.Director.Name}`}>
+                                            <Button variant="link">Director</Button>
+                                        </Link>
+                                        <Link to={`/genres/${movie.Genre.Name}`}>
+                                            <Button variant="link">Genre</Button>
+                                        </Link>
+                                    </div>
+                                }                
+                                <Button onClick={() => goBack()}>Back</Button>
+                            </Fragment>
                 }
-            </Card.Footer>
+            </div>
         </Card>
     );
 }

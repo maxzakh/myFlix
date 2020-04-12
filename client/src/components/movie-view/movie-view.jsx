@@ -1,6 +1,7 @@
 import React from 'react';
-import './movie-view.scss';
+import { Container, Row, Col } from 'react-bootstrap';
 import { MovieCard } from '../movie-card/movie-card';
+import './movie-view.scss';
 
 export function MovieView(props) {
     const { movie } = props;
@@ -10,6 +11,12 @@ export function MovieView(props) {
     }
 
     return (
-        <MovieCard movie={movie} showOpen={false} />
+        <Container>
+            <Row className='justify-content-center'>
+                <Col className='col-6'>
+                    <MovieCard movie={movie} showOpen={false} />
+                </Col>
+            </Row>
+        </Container>
     );
 }

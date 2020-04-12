@@ -1,3 +1,20 @@
+// .movie-card {
+//     background-color: red;
+// }
+
+.card-body {
+    display: grid;
+    grid-template-columns: minmax(100px, 1fr) 1fr;
+}
+
+// .card-body img {
+//     background-color: green;
+// }
+
+// .card-body div {
+//     background-color: green;
+// }
+
 .card-img-top {
     width: 100%;
     max-width: 60px;
@@ -6,11 +23,8 @@
     object-fit: cover;
 }
 
-.card-footer {
-    background-color: white;
-}
-
-.card-footer>.btn {
-    width: 100%;
-    background-color: rgb(190, 42, 42);
+.card-bottom {
+    display: flex;
+    justify-content: flex-end;
+    background-color: var(--light);
 }
