@@ -1,10 +1,22 @@
-// .movie-card {
-//     background-color: red;
-// }
+.movie-card {
+    // background-color: red;
+}
 
-.card-body {
+.card-top {
     display: grid;
     grid-template-columns: minmax(100px, 1fr) 1fr;
+    flex: 1 1 auto;
+    padding: 1.25rem;
+}
+
+.center-title {
+    margin: 0 auto;
+    padding-left: .4em;
+    font-weight: bold;
+}
+
+.card-desc {
+    padding: 0 1.25rem 1.25rem 1.25rem;
 }
 
 // .card-body img {
@@ -17,14 +29,23 @@
 
 .card-img-top {
     width: 100%;
-    max-width: 60px;
+    // max-width: 60px;
     // min-height: 400px;
     // max-height: 400px;
     object-fit: cover;
 }
 
+// .center-button {
+//     margin: 0 auto;
+//     width: 100%;
+// }
+
 .card-bottom {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     background-color: var(--light);
+}
+
+.favorites-button {
+    margin: .5em 0;
 }

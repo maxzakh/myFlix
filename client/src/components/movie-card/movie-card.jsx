@@ -18,17 +18,17 @@ export function MovieCard(props) {
 
     return (
         <Card className='movie-card shadow-sm'>
-            <div className='card-body'>
+            <div className='card-top'>
                 <Card.Img className='mx-auto' variant="top" src={movie.ImagePath} />
-                {inList ? <h6>{movie.Title}</h6> : <h5>{movie.Title}</h5>}
+                {inList ? <p className='center-title'>{movie.Title}</p> : <h5 className='center-title'>{movie.Title}</h5>}
             </div>
 
-            {!inList && <Card.Text>{movie.Description}</Card.Text>}
-            <div className='card-bottom'>
+            {!inList && !setFavorite && <div className='card-desc'>{movie.Description}</div>}
+            <div className='card-bottom center-button'>
                 {
                     setFavorite
                         ?
-                        <Form.Group>
+                        <Form.Group className='favorites-button'>
                             <Form.Check type='checkbox' label='Favorite' defaultChecked={favorite} onClick={(event) => {
                                 setFavorite(movie._id, event.target.checked);
                             }} />

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, Row, Col, Form, Toast } from 'react-bootstrap';
-
 import { MovieCard } from '../movie-card/movie-card';
+import './profile-view.scss';
 
 function inputControl(label, type, value, update, options, feedback) {
     if (!feedback) {
@@ -36,7 +36,7 @@ function MovieGrid(props) {
     }
 
     return (
-        <div>
+        <div className='movie-list'>
             {
                 movies.map(movie => {
                     return (
@@ -131,27 +131,33 @@ export function ProfileView(props) {
     }
 
     return (
-        <div className="container">
+        <div className="profile-view">
+            {showErrorDuplicated &&
             <Toast onClose={() => setShowErrorDuplicated(false)} show={showErrorDuplicated} delay={10000} autohide>
                 <Toast.Header>
-                    <strong className="mr-auto">Error</strong>
+                    <strong className="mr-auto text-danger">Error</strong>
                 </Toast.Header>
                 <Toast.Body>Username already exists</Toast.Body>
-            </Toast>
+            </Toast>}
 
             <Row>
-                <Col>
+                <Col className='col-6'>
                     <Form noValidate validated={validated}>
                         {inputControl('Username', 'text', username, setUsername, { required: true, pattern: '[a-zA-Z0-9_]{8,}' })}
                         {inputControl('Password', 'password', password, setPassword, { required: true, pattern: '[\S]{3,}' })}
                         {inputControl('Email', 'email', email, setEmail, { required: true, pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$' })}
                         {inputControl('Birthday', 'date', birthday, setBirthday, { required: true })}
 
-                        <Button onClick={handleSave}>Save</Button>
-                        <Button onClick={handleCancel}>Cancel</Button>
+                        <div className='profile-edit-buttons'>
+                            <Button onClick={handleSave}>Save</Button>
+                            <Button onClick={handleCancel}>Cancel</Button>
+                        </div>
                     </Form>
                 </Col>
-                <Col>
+                <Col className='col-2'>
+                </Col>
+                <Col className='col-4'>
+                    <p>If you are unhappy, you can unregister below</p>
                     <Button onClick={handleUnregister}>Unregister</Button>
                 </Col>
             </Row>

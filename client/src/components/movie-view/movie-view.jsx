@@ -13,7 +13,7 @@ export function MovieView(props) {
     return (
         <Container>
             <Row className='justify-content-center'>
-                <Col className='col-6'>
+                <Col className='col-8'>
                     <MovieCard movie={movie} showOpen={false} />
                 </Col>
             </Row>

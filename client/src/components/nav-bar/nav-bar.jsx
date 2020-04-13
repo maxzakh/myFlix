@@ -16,6 +16,7 @@ export function NavBar(props) {
                 user
                     ?
                     <div>
+                        <span>{user.Username}</span>
                         <Link to="/">
                             <Button>Movies</Button>
                         </Link>

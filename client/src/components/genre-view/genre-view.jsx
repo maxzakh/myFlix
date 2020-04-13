@@ -9,7 +9,7 @@ export function GenreView(props) {
         if (!movie) return null;
 
         return (
-            <Container className='col-8'>
+            <Container className='col-lg-6 col-8'>
                 <Card>
                     <Card.Body>
                         <Card.Title>{movie.Genre.Name}</Card.Title>
