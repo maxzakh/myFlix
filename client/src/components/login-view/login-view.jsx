@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import './login-view.scss';
-
 import axios from 'axios';
+import { SERVER_URL } from '../../apis';
+import './login-view.scss';
 
 export function LoginView(props) {
     const [username, setUsername] = useState('');
@@ -12,7 +12,7 @@ export function LoginView(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         setErrorMsg('');
-        axios.post('http://localhost:5500/login', {
+        axios.post(`${SERVER_URL}/login`, {
             Username: username,
             Password: password
         })

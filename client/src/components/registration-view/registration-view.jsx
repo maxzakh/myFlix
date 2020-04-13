@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import axios from "axios";
-import './registration-view.scss';
 import { Button, Row, Col } from 'react-bootstrap';
+import axios from "axios";
+import { SERVER_URL } from '../../apis';
+import './registration-view.scss';
 
 function fieldControl(label, value, onChange, type='text', feedback) {
     if (!feedback) {
@@ -33,7 +34,7 @@ export function RegistrationView(props) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        axios.post('http://localhost:5500/users', {
+        axios.post(`${SERVER_URL}/users`, {
             Username: username,
             Password: password,
             Email: email,

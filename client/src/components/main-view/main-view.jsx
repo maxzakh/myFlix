@@ -15,7 +15,7 @@ import { GenreView } from '../genre-view/genre-view';
 import { MovieView } from '../movie-view/movie-view';
 import { MovieList } from '../movie-list/movie-list';
 
-const SERVER_URL = 'http://localhost:5500';
+import { SERVER_URL } from '../../apis';
 
 const ProtectedRoute = ({
     component: Component, ...rest
@@ -104,9 +104,6 @@ export function MainView() {
         let favorites = user.FavoriteMovies;
         let isFav = favorites.includes(id);
 
-        // let newFavorites = !isFav ? [...favorites, id] : favorites.filter((itemId) => itemId !== id);
-        // console.log("new favorites", newFavorites);
-
         const del = (url, options) => axios.delete(url, options);
         const add = (url, options) => axios.post(url, null, options);
 
@@ -121,8 +118,6 @@ export function MainView() {
                 console.log('error', error);
             });
     }
-
-    // console.log(`Call render with: '${username}' user data:`, user);
 
     return (
         <Router>

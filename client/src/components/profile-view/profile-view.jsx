@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { SERVER_URL } from '../../apis';
 import { Button, Row, Col, Form, Toast } from 'react-bootstrap';
 import { MovieCard } from '../movie-card/movie-card';
 import './profile-view.scss';
@@ -88,7 +89,7 @@ export function ProfileView(props) {
             Birthday: birthday
         };
 
-        const url = `http://localhost:5500/users/${orgUsername}`;
+        const url = `${SERVER_URL}/users/${orgUsername}`;
         let config = { headers: { Authorization: `Bearer ${token}` } };
 
         axios.put(url, newUser, config)
@@ -116,7 +117,7 @@ export function ProfileView(props) {
     function handleUnregister(event) {
         let agree = confirm('Are you sure you want to leave our service?\nThis action cannot be undone.');
         if (agree) {
-            let url = `http://localhost:5500/users/${orgUsername}`;
+            let url = `${SERVER_URL}/users/${orgUsername}`;
             let config = { headers: { Authorization: `Bearer ${token}` } };
             axios.delete(url, config)
                 .then(res => {
