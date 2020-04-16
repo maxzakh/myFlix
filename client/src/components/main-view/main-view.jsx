@@ -3,7 +3,11 @@ import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import './main-view.scss';
 
+import { connect } from 'react-redux';
+
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+
+import { setMovies } from '../../actions/actions';
 
 import { NavBar } from '../nav-bar/nav-bar';
 import { FrontPageView } from '../front-page-view/front-page-view';
@@ -35,12 +39,14 @@ const ProtectedRoute = ({
     );
 };
 
-export function MainView() {
-    const [movies, setMovies] = useState([]);
+export function MainView(props) {
+    // const [movies, setMovies] = useState([]);
     const [username, setUsername] = useState('');
-    const [user, setUser] = useState(null);
+    // const [user, setUser] = useState(null);
 
     const [token, setToken] = useState('');
+
+    console.log('props', props);
 
     useEffect(() => {
         let accessToken = localStorage.getItem('token');
@@ -55,7 +61,8 @@ export function MainView() {
     function getMovies(token) {
         axios.get(`${SERVER_URL}/movies`, { headers: { Authorization: `Bearer ${token}` } })
             .then(response => {
-                setMovies(response.data);
+                props.setMovies(response.data);
+                // setMovies(response.data);
             })
             .catch(function (err) {
                 const msg = err.response ? err.response.data.message : err;
@@ -118,6 +125,9 @@ export function MainView() {
                 console.log('error', error);
             });
     }
+
+    let { movies } = props;
+    let { user } = state;
 
     return (
         <Router>
@@ -187,3 +197,9 @@ export function MainView() {
         </Router>
     );
 }
+
+let mapStateToProps = state => {
+    return { movies: state.movies }
+}
+
+export default connect(mapStateToProps, { setMovies })(MainView);
