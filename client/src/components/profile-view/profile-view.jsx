@@ -4,6 +4,8 @@ import { SERVER_URL } from '../../apis';
 import { Button, Row, Col, Form, Toast } from 'react-bootstrap';
 import { MovieCard } from '../movie-card/movie-card';
 import './profile-view.scss';
+import { connect } from 'react-redux';
+import VisibilityFilterInput from '../visibility-filter-input/visibility-filter-input';
 
 function inputControl(label, type, value, update, options, feedback) {
     if (!feedback) {
@@ -29,25 +31,39 @@ function inputControl(label, type, value, update, options, feedback) {
     );
 }
 
-function MovieGrid(props) {
-    const { movies, favorites, toggleFavorites } = props;
+function MovieGridRaw(props) {
+    const { movies, favorites, toggleFavorites, filter } = props;
 
     function isFavorite(id) {
         return favorites.includes(id);
     }
 
+    let lowerCaseFilter = filter.toLowerCase();
+    let filtered = filter ? movies.filter((movie) => movie.Title.toLowerCase().includes(lowerCaseFilter)) : movies;
+
     return (
-        <div className='movie-list'>
-            {
-                movies.map(movie => {
-                    return (
-                        <MovieCard key={movie._id} movie={movie} favorite={isFavorite(movie._id)} setFavorite={toggleFavorites} />
-                    );
-                })
-            }
+        <div>
+            <VisibilityFilterInput visibilityFilter={filter} />
+            <div className='movie-list'>
+                {
+                    filtered.map(movie => {
+                        return (
+                            <MovieCard key={movie._id} movie={movie} favorite={isFavorite(movie._id)} setFavorite={toggleFavorites} />
+                        );
+                    })
+                }
+            </div>
         </div>
     );
 }
+
+function mapStateToProps(state) {
+    return {
+        filter: state.filter
+    };
+}
+
+const MovieGrid = connect(mapStateToProps)(MovieGridRaw);
 
 export function ProfileView(props) {
     const { user, setUser, movies, toggleFavorites, unregister, token } = props;

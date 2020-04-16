@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Button } from 'react-bootstrap';
-import './main-view.scss';
-
-import { connect } from 'react-redux';
-
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-
-import { setMovies } from '../../actions/actions';
-
 import { NavBar } from '../nav-bar/nav-bar';
 import { FrontPageView } from '../front-page-view/front-page-view';
 import { LoginView } from '../login-view/login-view';
@@ -19,7 +10,12 @@ import { GenreView } from '../genre-view/genre-view';
 import { MovieView } from '../movie-view/movie-view';
 import { MovieList } from '../movie-list/movie-list';
 
+import axios from 'axios';
 import { SERVER_URL } from '../../apis';
+import './main-view.scss';
+
+import { connect } from 'react-redux';
+import { actions } from '../../actions/actions';
 
 const ProtectedRoute = ({
     component: Component, ...rest
@@ -41,12 +37,13 @@ const ProtectedRoute = ({
 
 export function MainView(props) {
     // const [movies, setMovies] = useState([]);
-    const [username, setUsername] = useState('');
+    // const [username, setUsername] = useState('');
     // const [user, setUser] = useState(null);
+    // const [token, setToken] = useState('');
+    let { movies, user, username, token, filter, setMovies, setUser, setUsername, setToken, setFilter } = props;
 
-    const [token, setToken] = useState('');
-
-    console.log('props', props);
+    // console.log('props', props);
+    // return (<div>work in progress</div>);
 
     useEffect(() => {
         let accessToken = localStorage.getItem('token');
@@ -126,9 +123,6 @@ export function MainView(props) {
             });
     }
 
-    let { movies } = props;
-    let { user } = state;
-
     return (
         <Router>
             <div className="main-view">
@@ -136,7 +130,7 @@ export function MainView(props) {
                 <div className="main-content">
                     <Route exact path="/" render={() => {
                         if (user) {
-                            return <MovieList movies={movies} />
+                            return <MovieList movies={movies} visibilityFilter={filter} />
                         }
                         else {
                             return <FrontPageView />;
@@ -198,8 +192,34 @@ export function MainView(props) {
     );
 }
 
-let mapStateToProps = state => {
-    return { movies: state.movies }
+function mapStateToProps(state) {
+    return {
+        movies: state.movies,
+        user: state.user,
+        username: state.username,
+        token: state.token,
+        filter: state.filter
+    };
 }
 
-export default connect(mapStateToProps, { setMovies })(MainView);
+function mapDispatchToProps(dispatch) {
+    return {
+        setMovies(newMovies) {
+            return dispatch(actions.setMovies(newMovies));
+        },
+        setUser(newUser) {
+            return dispatch(actions.setUser(newUser));
+        },
+        setUsername(newUsername) {
+            return dispatch(actions.setUsername(newUsername));
+        },
+        setToken(newToken) {
+            return dispatch(actions.setToken(newToken));
+        },
+        setFilter(newFilter) {
+            return dispatch(actions.setFilter(newFilter));
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainView);

@@ -1,10 +1,44 @@
-export const SET_MOVIES = 'SET_MOVIES';
-export const SET_FILTER = 'SET_FILTER';
+import * as types from './types';
 
-export function setMovies(value) {
-    return { type: SET_MOVIES, value };
+function setMovies(value) {
+    return {
+        type: types.SET_MOVIES,
+        value
+    };
 }
 
-export function setFilter(value) {
-    return { type: SET_FILTER, value };
+function setUser(value) {
+    return {
+        type: types.SET_USER,
+        value
+    };
 }
+
+function setUsername(value) {
+    return {
+        type: types.SET_USERNAME,
+        value
+    };
+}
+
+function setToken(value) {
+    return {
+        type: types.SET_TOKEN,
+        value
+    };
+}
+
+function setFilter(value) {
+    return {
+        type: types.SET_FILTER,
+        value
+    };
+}
+
+export const actions = {
+    setMovies,
+    setUser,
+    setUsername,
+    setToken,
+    setFilter
+};
