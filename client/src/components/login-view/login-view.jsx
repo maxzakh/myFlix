@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
-import { SERVER_URL } from '../../apis';
+import { SERVER_URL, SUB_DIR } from '../../apis';
 import './login-view.scss';
 
 export function LoginView(props) {
@@ -47,7 +47,7 @@ export function LoginView(props) {
             
                         <Button variant="primary" type="submit" onClick={handleSubmit}>Login</Button>
                         <Button onClick={() => {
-                            window.location.href = '/';
+                            window.location.href = SUB_DIR;
                         }}>Cancel</Button>
                         {
                             errorMsg

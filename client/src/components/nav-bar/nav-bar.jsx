@@ -13,7 +13,7 @@ export function NavBar(props) {
     return (
         <Navbar className='nav-bar-container shadow-sm' bg='light'>
             {
-                user
+                user.Username
                     ?
                     <div>
                         <span>{user.Username}</span>

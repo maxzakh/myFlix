@@ -12,6 +12,10 @@ const { check, validationResult } = require('express-validator');
 const generateJWTToken = require('./auth-jwt');
 
 const app = express();
+
+app.use(express.static("public"));
+app.use("/client", express.static(path.join(__dirname, "..", "client", "dist")));
+
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -125,6 +129,10 @@ app.post('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { sess
 // GET Requests
 
 // Route: Unprotected: root
+app.get('/client/*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
+  });
+
 app.get('/', (req, res) => {
     res.contentType('html');
     res.end('<h1>This is the default</h1>');
@@ -132,7 +140,7 @@ app.get('/', (req, res) => {
 
 // Route: Unprotected: get login page
 app.get('/login', (req, res) => {
-    let login = path.join(__dirname, '../public/login.html');
+    let login = path.join(__dirname, '..', 'public', 'login.html');
     fs.readFile(login, (err, data) => {
         if (err) {
             res.status(500);

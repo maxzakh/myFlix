@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import { NavBar } from '../nav-bar/nav-bar';
 import { FrontPageView } from '../front-page-view/front-page-view';
 import { LoginView } from '../login-view/login-view';
@@ -9,9 +9,10 @@ import { DirectorView } from '../director-view/director-view';
 import { GenreView } from '../genre-view/genre-view';
 import { MovieView } from '../movie-view/movie-view';
 import { MovieList } from '../movie-list/movie-list';
+import { initialState } from '../../reducers/reducers';
 
 import axios from 'axios';
-import { SERVER_URL } from '../../apis';
+import { SERVER_URL, SUB_DIR } from '../../apis';
 import './main-view.scss';
 
 import { connect } from 'react-redux';
@@ -24,7 +25,7 @@ const ProtectedRoute = ({
         <Route
             {...rest}
             render={(props) => {
-                if (rest.user) {
+                if (rest.user && rest.user.Username) {
                     return <Component {...props} {...rest} />
                 }
                 else {
@@ -86,7 +87,7 @@ export function MainView(props) {
 
         getMovies(authData.token);
 
-        window.open('/', '_self');
+        window.open(SUB_DIR, '_self');
     }
 
     function logOut() {
@@ -95,7 +96,7 @@ export function MainView(props) {
         localStorage.removeItem('userObj');
 
         setUsername('');
-        setUser(null);
+        setUser(initialState.user);
     }
 
     function updateUser(user, token) {
@@ -124,68 +125,71 @@ export function MainView(props) {
     }
 
     return (
-        <Router>
+        <Router basename={SUB_DIR}>
             <div className="main-view">
                 <NavBar user={user} logOut={logOut} />
                 <div className="main-content">
-                    <Route exact path="/" render={() => {
-                        if (user) {
-                            return <MovieList movies={movies} visibilityFilter={filter} />
+                    <Switch>
+                        <Route exact path="/" render={() => {
+                            if (user.Username) {
+                                return <MovieList movies={movies} visibilityFilter={filter} />
+                            }
+                            else {
+                                return <FrontPageView />;
+                            }
+                        }} />
+                        <Route exact path="/login" render={() => {
+                            if (!username) {
+                                return <LoginView onLoggedIn={authData => {
+                                    return onLoggedIn(authData);
+                                }} />;
+                            }
+                            else {
+                                return <Redirect to='/' />
+                            }
                         }
-                        else {
-                            return <FrontPageView />;
-                        }
-                    }} />
-                    <Route exact path="/login" render={() => {
-                        if (!username) {
-                            return <LoginView onLoggedIn={authData => {
-                                return onLoggedIn(authData);
-                            }} />;
-                        }
-                        else {
-                            return <Redirect to='/' />
-                        }
-                    }
-                    } />
-                    <Route path="/register" render={() => {
-                        if (!user) {
-                            return <RegistrationView />;
-                        }
-                        else {
-                            return <Redirect to='/' />
-                        }
-                    }} />
-                    {/* <ProtectedRoute path="/register" component={RegistrationView} user={!user} /> */}
-                    <ProtectedRoute path="/profile" component={ProfileView} user={user} setUser={updateUser} movies={movies} toggleFavorites={toggleFavorites} unregister={logOut} token={token} />
-                    <Route path="/movies/:movieId" render={(props) => {
-                        if (user) {
-                            return <MovieView
-                                movie={movies.find(m => {
-                                    return m._id === props.match.params.movieId;
-                                })}
-                                showOpen={false}
-                            />
-                        }
-                        else {
-                            return <Redirect to='/' />
-                        }
-                    }} />
-                    <Route exact path="/genres/:name" render={(props) => {
-                        if (user) {
-                            return <GenreView movie={movies.find(m => m.Genre.Name === props.match.params.name)} />
-                        }
-                        else {
-                            return <Redirect to='/' />
-                        }
-                    }} />
-                    <Route exact path="/directors/:name" render={(props) => {
-                        if (user) {
-                            return <DirectorView movie={movies.find(m => m.Director.Name === props.match.params.name)} />
-                        }
-                        else {
-                            return <Redirect to='/' />
-                        }
-                    }} />
+                        } />
+                        <Route path="/register" render={() => {
+                            if (!user.Username) {
+                                return <RegistrationView />;
+                            }
+                            else {
+                                return <Redirect to='/' />
+                            }
+                        }} />
+                        {/* <ProtectedRoute path="/register" component={RegistrationView} user={!user} /> */}
+                        <ProtectedRoute path="/profile" component={ProfileView} user={user} setUser={updateUser} movies={movies} toggleFavorites={toggleFavorites} unregister={logOut} token={token} />
+                        <Route path="/movies/:movieId" render={(props) => {
+                            if (user.Username) {
+                                return <MovieView
+                                    movie={movies.find(m => {
+                                        return m._id === props.match.params.movieId;
+                                    })}
+                                    showOpen={false}
+                                />
+                            }
+                            else {
+                                return <Redirect to='/' />
+                            }
+                        }} />
+                        <Route exact path="/genres/:name" render={(props) => {
+                            if (user.Username) {
+                                return <GenreView movie={movies.find(m => m.Genre.Name === props.match.params.name)} />
+                            }
+                            else {
+                                return <Redirect to='/' />
+                            }
+                        }} />
+                        <Route exact path="/directors/:name" render={(props) => {
+                            if (user.Username) {
+                                return <DirectorView movie={movies.find(m => m.Director.Name === props.match.params.name)} />
+                            }
+                            else {
+                                return <Redirect to='/' />
+                            }
+                        }} />
+                        <Route component={FrontPageView} />
+                    </Switch>
                 </div>
             </div>
         </Router>

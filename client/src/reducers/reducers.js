@@ -32,7 +32,7 @@ const moviesApp = combineReducers({
 export default moviesApp;
 */
 
-const initialState = {
+export const initialState = {
     movies: [],
     user: {
         Username: '',
