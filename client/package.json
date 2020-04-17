@@ -19,6 +19,7 @@
     "react-dom": "^16.13.0",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
+    "parcel-bundler": "^1.12.4",
     "redux": "^4.0.5"
   },
   "devDependencies": {
@@ -29,7 +30,6 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
     "cssnano": "^4.1.10",
-    "parcel-bundler": "^1.12.4",
     "sass": "^1.26.3"
   }
 }
