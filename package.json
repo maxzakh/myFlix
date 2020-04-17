@@ -7,7 +7,7 @@
     "dev": "nodemon src/index.js",
     "start:dev": "node src/index.js --local",
     "start": "node src/index.js",
-    "build": "cd ./client && parcel build ./src/index.html --public-url /client"
+    "build": "cd ./client && npm install && parcel build ./src/index.html --public-url /client"
   },
   "repository": {
     "type": "git",
